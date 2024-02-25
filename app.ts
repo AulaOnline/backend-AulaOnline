@@ -1,21 +1,42 @@
 import express from 'express'
 import cors from 'cors'
-import loginController from './controlers/loginController';
 const PORT = process.env.PORT || 3000
 const HOSTNAME = process.env.HOSTNAME || 'http://localhost'
 const app = express()
-
-app.get('/', (req, res) => {
-    res.send('Bem-vindo!')
+import customResponse from './core/model/customResponse';
+import loginController from './features/login/loginController';
+import "reflect-metadata";
+import {DataSource} from "typeorm";
+import {User} from "./core/entities/userEntitie";
+export const AppDataSource = new DataSource({
+    type: "mysql",
+    database: "AulaOnline-Database",
+    username: "root",
+    password: "",
+    synchronize: true,
+    entities: [User]
 })
+
+AppDataSource.initialize()
+    .then(() => {
+        console.log("Conexao estabelecida");
+    })
+    .catch((error) => console.log(error))
+
+
+app.use(express.urlencoded({extended: true,}))
+app.use(express.json());
+
+app.get('/', (req, res) => {res.send('Hello World!')})
 
 app.use(cors({
     origin: ['http://localhost:3000']
 }))
-app.use('/login', loginController)
+
+app.use('/login', loginController);
 
 app.use((req, res) => {
-    res.status(404)
+    return res.status(404).json(new customResponse(404, "Erro 404 Detectado", null));
 })
 
 app.listen(PORT, () => {
