@@ -38,6 +38,7 @@ router.post('/register', async (req, res) => {
 });
 router.get('/userById/:id', async (req, res) => {
     const NewUserService: UserService = new UserService();
+    console.log("ok")
     const userID : string = req.params.id;
     try {
         const user: User = await NewUserService.getUserByID(userID);
