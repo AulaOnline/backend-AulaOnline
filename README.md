@@ -22,7 +22,7 @@ Este endpoint é usado para registrar um novo usuário no sistema.
 - `username`: O nome de usuário do novo usuário.
 - `password`: A senha do novo usuário.
 
-## Checa login e senha dos usuarios (POST /checkCredentials)
+## Checa login e senha do usuario (POST /checkCredentials)
 Este endpoint é usado para verificar as credenciais de um usuário, para fazer o login do mesmo, ele confere no banco de dados se o usuario e senha sao compativeis.
 
 ### Parâmetros
