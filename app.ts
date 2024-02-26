@@ -14,7 +14,7 @@ export const AppDataSource = new DataSource({
     type: "mysql",
     database: "AulaOnline-Database",
     username: "root",
-    password: "filipe2004",
+    password: "",
     synchronize: false,
     entities: [User]
 })
