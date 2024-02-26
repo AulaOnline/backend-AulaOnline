@@ -9,12 +9,18 @@ import "reflect-metadata";
 import {DataSource} from "typeorm";
 import {User} from "./core/entities/userEntitie";
 const cookieParser =  require('cookie-parser');
+import dotenv from 'dotenv';
+dotenv.config();
+
+const dbUser = process.env.DB_USER;
+const dbPassword = process.env.DB_PASSWORD;
+
 
 export const AppDataSource = new DataSource({
     type: "mysql",
     database: "AulaOnline-Database",
-    username: "root",
-    password: "filipe2004",
+    username: dbUser,
+    password: dbPassword,
     synchronize: false,
     entities: [User]
 })
