@@ -5,6 +5,7 @@ import UserService from "./loginService";
 const router = express.Router();
 const bcrypt = require('bcrypt');
 interface UserCredentials {
+  id: number,
   username: string,
   password: string
 }
@@ -35,7 +36,18 @@ router.post('/register', async (req, res) => {
         return res.status(500).json(new CustomResponse(500, "Internal Server Error", null));
     }
 });
-
+router.get('/userById/:id', async (req, res) => {
+    const NewUserService: UserService = new UserService();
+    const userID : string = req.params.id;
+    try {
+        const user: User = await NewUserService.getUserByID(userID);
+        return res.status(200).json( new CustomResponse(200, "Usuario Encontrado", user));
+    }
+    catch (error){
+        console.error("Erro ao Buscar Usuario", error);
+        return res.status(500).json( new CustomResponse(500, "Internar Server Error", null));
+    }
+})
 router.post('/checkCredentials', async (req, res) => {
     try{
         const {username, password } = req.body;

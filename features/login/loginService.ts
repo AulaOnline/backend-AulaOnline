@@ -22,6 +22,19 @@ export default class UserService {
             throw new Error("Erro ao registrar usuário");
         }
     }
+    async getUserByID(userID: string): Promise<User> {
+        const id: number = parseInt(userID, 10);
+        try {
+            const user: User | null = await User.findOne({ where: {id: id}})
+            if(user)
+                return user;
+            else
+                throw new Error("ID nao cadastrado no sistema")
+        } catch (error) {
+            console.error("Erro ao registrar usuário:", error);
+            throw new Error("Erro ao registrar usuário");
+        }
+    }
 
     async isValidCredentials(user: User): Promise<boolean> {
         try {
