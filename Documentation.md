@@ -4,7 +4,7 @@ Este arquivo contém informações sobre os endpoints disponíveis na API.
 # Padrao De Resposta
 Nesta API todas as requisições vem com uma Resposta Padrão, todas as requisições devolvem um json com o seguinte formato 
 
-        {
+         {
 	"statusCode": o status da requisiao ,
 	"message": uma mensagem sobre a requisicao ,
 	"data": quando for um get, retorna um ou mais objetos, quando for um post retorna null. 
