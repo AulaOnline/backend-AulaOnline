@@ -8,12 +8,14 @@ import loginController from './features/login/loginController';
 import "reflect-metadata";
 import {DataSource} from "typeorm";
 import {User} from "./core/entities/userEntitie";
+const cookieParser =  require('cookie-parser');
+
 export const AppDataSource = new DataSource({
     type: "mysql",
     database: "AulaOnline-Database",
     username: "root",
-    password: "",
-    synchronize: true,
+    password: "filipe2004",
+    synchronize: false,
     entities: [User]
 })
 
@@ -23,7 +25,7 @@ AppDataSource.initialize()
     })
     .catch((error) => console.log(error))
 
-
+app.use(cookieParser());
 app.use(express.urlencoded({extended: true,}))
 app.use(express.json());
 

@@ -1,7 +1,6 @@
 import express from 'express';
 import CustomResponse from "../../core/model/customResponse";
 import {User} from "../../core/entities/userEntitie";
-import {AppDataSource} from "../../app";
 import UserService from "./loginService";
 const router = express.Router();
 const bcrypt = require('bcrypt');
@@ -34,6 +33,24 @@ router.post('/register', async (req, res) => {
     } catch (error) {
         console.error("Erro ao registrar usuário:", error);
         return res.status(500).json(new CustomResponse(500, "Internal Server Error", null));
+    }
+});
+
+router.post('/checkCredentials', async (req, res) => {
+    try{
+        const {username, password } = req.body;
+        const user: User = new User();
+        user.username = username;
+        user.password = password;
+        const NewUserService: UserService = new UserService();
+        if (await NewUserService.isValidCredentials(user)){
+            return res.status(200).json(new CustomResponse(200, "Credenciais Corretas", null));
+        }
+        else
+            return res.status(400).json(new CustomResponse(400, "Credencias Inorretas", null));
+
+    } catch (err){
+
     }
 });
 export default router;
