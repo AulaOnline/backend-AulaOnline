@@ -32,6 +32,12 @@ Este endpoint é usado para registrar um novo usuário no sistema.
 - `password`: A senha do novo usuário.
 
 ---
+## Recupera um Atributo do usuario pelo ID (GET /getUserAttributeByID)
+Este endpoint é usado para recuperar um atributo do usuario pelo ID
+### Parâmetros - (Body)
+- `id`: O id do usuario.
+- `atributo`: atributo que deseja retornar.
+---
 
 ## Checa login e senha do usuario (POST /checkCredentials)
 Este endpoint é usado para verificar as credenciais de um usuário, para fazer o login do mesmo, ele confere no banco de dados se o usuario e senha sao compativeis.

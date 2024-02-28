@@ -1,5 +1,7 @@
 import {User} from "../../core/entities/userEntitie";
 import {AppDataSource} from "../../app";
+import {AtributoInvalido, IDInvalido} from "./validation/UserErrors";
+import CustomResponse from "../../core/model/customResponse";
 
 const bcrypt = require('bcrypt');
 
@@ -29,13 +31,31 @@ export default class UserService {
             if(user)
                 return user;
             else
-                throw new Error("ID nao cadastrado no sistema")
+                throw new IDInvalido(404, "ID nao cadastrado no sistema");
         } catch (error) {
             console.error("Erro ao registrar usuário:", error);
             throw new Error("Erro ao registrar usuário");
         }
     }
 
+    async getUserAttributeByID(userID: number, attribute: string){
+        try {
+            const user = await User.findOne({where: {id:userID}})
+            if (!user)
+                throw new IDInvalido(404, "ID nao cadastrado no sistema");
+
+            switch (attribute.toLowerCase()){
+                case "email":
+                    return user.email;
+                case "username":
+                    return user.username;
+                default:
+                    throw new AtributoInvalido(404,"Atributo Invalido");
+            }
+        }catch (error){
+            return error;
+        }
+    }
     async isValidCredentials(user: User): Promise<boolean> {
         try {
             const existingUser: User | null = await User.findOne({where: {username: user.username}});

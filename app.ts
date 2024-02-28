@@ -43,6 +43,7 @@ app.use(cors({
 
 app.use('/login', loginController);
 
+
 app.use((req, res) => {
     return res.status(404).json(new customResponse(404, "Erro 404 Detectado", null));
 })
