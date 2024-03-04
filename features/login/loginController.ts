@@ -3,6 +3,7 @@ import CustomResponse from "../../core/model/customResponse";
 import {User} from "../../core/entities/userEntitie";
 import UserService from "./loginService";
 import {UserValidations} from "./validation/UserValidations";
+import { createTokens, isTokenValid } from '../../core/infra/JWT';
 const router = express.Router();
 const bcrypt = require('bcrypt');
 interface UserCredentials {
@@ -82,7 +83,8 @@ router.post('/checkCredentials', async (req, res) => {
         user.password = password;
         const NewUserService: UserService = new UserService();
         if (await NewUserService.isValidCredentials(user)){
-            return res.status(200).json(new CustomResponse(200, "Credenciais Corretas", null));
+            const token = createTokens(user)
+            return res.status(200).json(new CustomResponse(200, "Credenciais Corretas", {token : token}));
         }
         else
             return res.status(400).json(new CustomResponse(400, "Credencias Inorretas", null));
@@ -90,4 +92,21 @@ router.post('/checkCredentials', async (req, res) => {
     } catch (err){
     }
 });
+
+router.post('/verificar-token', (req, res) => {
+    const token = req.body.token; // Acessa o token no corpo da requisição
+
+    if (!token) {
+        return res.status(401).json({ success: false, message: 'Token não fornecido' });
+    }
+
+    const result = isTokenValid(token);
+
+    if (result.valid) {
+        return res.status(200).json({ success: true, message: 'Token válido', decoded: result.decoded });
+    } else {
+        return res.status(403).json({ success: false, message: 'Token inválido' });
+    }
+});
+
 export default router;

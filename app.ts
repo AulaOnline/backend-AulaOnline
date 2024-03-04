@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 const HOSTNAME = process.env.HOSTNAME || 'http://localhost'
 const app = express()
 import customResponse from './core/model/customResponse';
