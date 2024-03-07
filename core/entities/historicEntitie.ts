@@ -16,13 +16,13 @@ export class Historic extends BaseEntity{
     //Aqui estou fazendo um relacionamento muitos p um pegando o id do usuario que foi criado em outra entidade(User) e utilizando a chave nesta entidade
     @ManyToOne(type => User)
     @JoinColumn({ name: 'user_id' })
-    user_id!: User;
+    user_id!: number;
 
     @ManyToOne(type => Video)
     @JoinColumn({ name: 'link', referencedColumnName: 'video_link' })
     video!: Video;
 
     @ManyToOne(type => Annotation)
-    @JoinColumn({name: 'annotation', referencedColumnName: 'tittle'})
+    @JoinColumn({ name: 'annotation', referencedColumnName: 'tittle' })
     annotation!: Annotation;
 }

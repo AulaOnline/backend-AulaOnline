@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, BaseEntity} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany} from 'typeorm';
 import "reflect-metadata";
+import { Historic } from './historicEntitie';
 @Entity()
 export class Annotation extends BaseEntity{
     @PrimaryGeneratedColumn()
@@ -10,4 +11,6 @@ export class Annotation extends BaseEntity{
 
     @Column()
     body!: string;
+
+   
 }

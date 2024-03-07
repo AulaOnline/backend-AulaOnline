@@ -4,10 +4,20 @@ const PORT = process.env.PORT || 3001
 const HOSTNAME = process.env.HOSTNAME || 'http://localhost'
 const app = express()
 import customResponse from './core/model/customResponse';
+
 import loginController from './features/login/loginController';
+import historicController from './features/historic/historicController';
+
+
 import "reflect-metadata";
 import {DataSource} from "typeorm";
+
+
 import {User} from "./core/entities/userEntitie";
+import {Historic} from "./core/entities/historicEntitie";
+import { Video } from './core/entities/videoEntitie';
+import { Annotation } from './core/entities/annotationEntitie';
+
 const cookieParser =  require('cookie-parser');
 import dotenv from 'dotenv';
 dotenv.config();
@@ -21,8 +31,9 @@ export const AppDataSource = new DataSource({
     database: "AulaOnline-Database",
     username: dbUser,
     password: dbPassword,
+    //1º uso mudar para true:
     synchronize: false,
-    entities: [User]
+    entities: [User,Historic,Video,Annotation]
 })
 
 AppDataSource.initialize()
@@ -41,7 +52,9 @@ app.use(cors({
     origin: ['http://localhost:3000']
 }))
 
+//Adcione suas rotas, senão apesar de criadas não vão ser usadas...
 app.use('/login', loginController);
+app.use('/historic', historicController);
 
 
 app.use((req, res) => {

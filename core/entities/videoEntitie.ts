@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn, OneToMany} from 'typeorm';
 import "reflect-metadata";
+import { Historic } from './historicEntitie';
 
 
 
@@ -19,6 +20,9 @@ export class Video extends BaseEntity{
 
     @Column()
     transcript!: string; 
+
+    
+
 
 
 }
