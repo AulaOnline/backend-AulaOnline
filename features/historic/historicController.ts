@@ -3,23 +3,38 @@ import CustomResponse from "../../core/model/customResponse";
 import {Historic} from "../../core/entities/historicEntitie";
 const router = express.Router();
 import HistoricService from './historicService';
+import { Video } from '../../core/entities/videoEntitie';
 
 
 const NewHistoricService = new HistoricService();
 
 //Cria um novo registro no histórico associado a um vídeo.
-router.post('/postNewVideoInHistoric/:idUser', async (req, res) => {
-   try {
-    const { watched_time, video_link, annotation } = req.body;
-    const Id:string = req.params.idUser;
-    const historic = new Historic();
-    historic.watched_time = watched_time;
-    historic.video= video_link;
-    historic.annotation = annotation;
-    
-    const NewHistoric = await NewHistoricService.postVideo(Id,historic);
+//1º dado um link de um video na aplicação (INPUT) vai adciionar esse video na tabela de videos do usuario e no historico
 
-    return res.status(201).json(new CustomResponse(201, "Vídeo adicionado com sucesso", NewHistoric));
+router.post('/postNewVideoInHistoric/:idUser', async (req, res) => {
+  try {
+    const { video_link } = req.body;
+    const userId = req.params.idUser;
+
+    // Obter informações do YouTube para o vídeo, não é dado no body
+    const { title, duration, transcript } = await NewHistoricService.getYouTubeVideoInfo(video_link, 'AIzaSyAP8NzNyRNglRy0lOJR8thFiRJzCfL6Oe0');
+
+   
+    const video = new Video();
+    video.tittle =title;
+    video.total_time=duration;
+    video.transcript = transcript;
+    video.video_link = video_link;
+    await video.save();
+
+    
+    const newHistoric = await NewHistoricService.postVideoinHistoric(userId, video);
+
+    return res.status(201).json({
+      status: 201,
+      message: 'Vídeo adicionado com sucesso',
+      newHistoric
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
@@ -107,5 +122,9 @@ router.get('getAtributoVideoInHistoric/:idVideo/:atributo', async (req, res) => 
 
 
 export default router;
+
+
+
+
 
 
