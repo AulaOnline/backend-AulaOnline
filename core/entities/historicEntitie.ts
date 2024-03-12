@@ -10,7 +10,7 @@ export class Historic extends BaseEntity{
     @PrimaryGeneratedColumn()
     historic_id!: number;
 
-    @Column()
+    @Column({ nullable: true })
     watched_time!: number;
 
     //Aqui estou fazendo um relacionamento muitos p um pegando o id do usuario que foi criado em outra entidade(User) e utilizando a chave nesta entidade

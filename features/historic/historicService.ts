@@ -9,19 +9,12 @@ export default class HistoricService {
 
   async postVideo(video_link: string): Promise <Video> {
     try {
-      const { title, duration, transcript} = await this.getYouTubeVideoInfo(video_link, 'AIzaSyAP8NzNyRNglRy0lOJR8thFiRJzCfL6Oe0');
+      const { title, duration} = await this.getYouTubeVideoInfo(video_link, 'AIzaSyAP8NzNyRNglRy0lOJR8thFiRJzCfL6Oe0');
       const video: Video = new Video();
       video.tittle = title;
       video.total_time = duration;
       video.video_link = video_link;
-      video.transcript = transcript;
-      console.log("titulo: " + title);
-      console.log("Duration" + duration);
-      console.log("Transcript" + transcript);
-      console.log("link " +video_link);
-      await Video.save(video);
-      console.log("oi")
-      return video;
+      return await AppDataSource.manager.save(video);
     } catch (e){
       throw new VideoNaoExiste(400, 'erro ao salvar o video no banco de dados');
     }
@@ -31,7 +24,6 @@ export default class HistoricService {
   async postHistoricRegister(UserId: string, video: Video): Promise<Historic> {
     try {
       const id = parseInt(UserId);
-
       const historic = new Historic();
       historic.video = video;
       historic.user_id = id;
