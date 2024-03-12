@@ -8,9 +8,10 @@ import { Video } from '../../core/entities/videoEntitie';
 
 const NewHistoricService = new HistoricService();
 
+
+//CREATE
 //Cria um novo registro no histórico associado a um vídeo.
 //1º dado um link de um video na aplicação (INPUT) vai adciionar esse video na tabela de videos do usuario e no historico
-
 router.post('/postNewVideoInHistoric/:idUser', async (req, res) => {
   try {
     const { video_link } = req.body;
@@ -30,6 +31,7 @@ router.post('/postNewVideoInHistoric/:idUser', async (req, res) => {
   }
 })
 
+//READ
 //Obtém uma lista de TODOS os vídeos no histórico do usuário.
 router.get('/getVideosInHistoric/:idUser', async (req, res) => {
   try {
@@ -43,38 +45,11 @@ router.get('/getVideosInHistoric/:idUser', async (req, res) => {
 })
 
 
-//Exclui TODOS vídeos do histórico.
+//DELETE
 router.delete('/deleteVideoInHistoric/:idUser', async (req, res) => {
   try {
     const Id: string = req.params.idUser;
-    const Deleted = await NewHistoricService.deleteAllVideos(Id);
-    return res.status(204).json(new CustomResponse(204, "Videos deletados Com Sucesso", Deleted));
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-})
-
-//Obtém um vídeo específico apartir do titulo do próprio
-router.get('/getVideoByTittle/:idUser', async (req, res) => {
-  try {
-    const { tittle } = req.body;
-    const IdUser: string = req.params.idUser;
-    const Video = await NewHistoricService.getVideoByTittle(IdUser, tittle);
-    return res.status(200).json(new CustomResponse(200, "Busca Feita Com Sucesso", Video));
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-})
-
-
-//ABAIXO NAO ESTA IMPLEMENTADO O SERVICE, NAO EXISTE ESSAS FUNCIONALIDADES
-//Exclui um vídeo especifico a partir do ID do próprio 
-router.delete('/deleteVideoInHistoric/:idUser/:videolink', async (req, res) => {
-  try {
-    const Id: string = req.params.idUser;
-    const Video: string = req.params.videolink;
+    const Video: string = req.body.videolink;
     const Deleted = await NewHistoricService.deleteVideo(Id, Video);
     return res.status(204).json(new CustomResponse(204, "Video deletado Com Sucesso", Deleted));
   } catch (error) {
@@ -82,28 +57,12 @@ router.delete('/deleteVideoInHistoric/:idUser/:videolink', async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 })
-
-//Atualiza um atributo de um Video especifico
-router.put('/updateAtributoVideo/:idVideo/:atributo/:valor', async (req, res) => {
+//Exclui TODOS vídeos do histórico.
+router.delete('/deleteAllVideoInHistoric/:idUser', async (req, res) => {
   try {
-    const Id: string = req.params.idVideo;
-    const Atributo: string = req.params.atributo;
-    const NewValor = req.params.valor;
-    const Update = await NewHistoricService.updateVideo(Id, Atributo, NewValor);
-    //return res.status(204).json(new CustomResponse(204, "Video atualizado Com Sucesso",Update));
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-})
-
-//Obtém um atributo de um vídeo específico a partir do ID do próprio 
-router.get('getAtributoVideoInHistoric/:idVideo/:atributo', async (req, res) => {
-  try {
-    const Id = req.params.idVideo;
-    const Atributo = req.params.atributo;
-    const AtributoVideo = await NewHistoricService.getAtributoVideo(Id, Atributo);
-    return res.status(200).json(new CustomResponse(200, "Busca Feita Com Sucesso", AtributoVideo));
+    const Id: string = req.params.idUser;
+    const Deleted = await NewHistoricService.deleteAllVideos(Id);
+    return res.status(204).json(new CustomResponse(204, "Videos deletados Com Sucesso", Deleted));
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
