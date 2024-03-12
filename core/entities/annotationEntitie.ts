@@ -4,7 +4,7 @@ import { Historic } from './historicEntitie';
 @Entity()
 export class Annotation extends BaseEntity{
     @PrimaryGeneratedColumn()
-    annotation_id!: number;
+    annotation_id!: string;
 
     @Column()
     tittle!: string;
