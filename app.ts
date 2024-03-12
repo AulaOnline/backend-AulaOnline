@@ -10,15 +10,15 @@ import historicController from './features/historic/historicController';
 
 
 import "reflect-metadata";
-import {DataSource} from "typeorm";
+import { DataSource } from "typeorm";
 
 
-import {User} from "./core/entities/userEntitie";
-import {Historic} from "./core/entities/historicEntitie";
+import { User } from "./core/entities/userEntitie";
+import { Historic } from "./core/entities/historicEntitie";
 import { Video } from './core/entities/videoEntitie';
 import { Annotation } from './core/entities/annotationEntitie';
 
-const cookieParser =  require('cookie-parser');
+const cookieParser = require('cookie-parser');
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -33,7 +33,7 @@ export const AppDataSource = new DataSource({
     password: dbPassword,
     //1º uso mudar para true:
     synchronize: false,
-    entities: [User,Historic,Video,Annotation]
+    entities: [User, Historic, Video, Annotation]
 })
 
 AppDataSource.initialize()
@@ -43,10 +43,10 @@ AppDataSource.initialize()
     .catch((error) => console.log(error))
 
 app.use(cookieParser());
-app.use(express.urlencoded({extended: true,}))
+app.use(express.urlencoded({ extended: true, }))
 app.use(express.json());
 
-app.get('/', (req, res) => {res.send('Hello World!')})
+app.get('/', (req, res) => { res.send('Hello World!') })
 
 app.use(cors({
     origin: ['http://localhost:3000']
