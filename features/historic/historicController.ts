@@ -16,19 +16,8 @@ router.post('/postNewVideoInHistoric/:idUser', async (req, res) => {
     const { video_link } = req.body;
     const userId = req.params.idUser;
 
-    // Obter informações do YouTube para o vídeo, não é dado no body
-    const { title, duration, transcript } = await NewHistoricService.getYouTubeVideoInfo(video_link, 'AIzaSyAP8NzNyRNglRy0lOJR8thFiRJzCfL6Oe0');
-
-
-    const video = new Video();
-    video.tittle = title;
-    video.total_time = duration;
-    video.transcript = transcript;
-    video.video_link = video_link;
-    await video.save();
-
-
-    const newHistoric = await NewHistoricService.postVideoinHistoric(userId, video);
+    const newVideo: Video = await NewHistoricService.postVideo(video_link);
+    const newHistoric :Historic = await NewHistoricService.postHistoricRegister(userId, newVideo);
 
     return res.status(201).json({
       status: 201,

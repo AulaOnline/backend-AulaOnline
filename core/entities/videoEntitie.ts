@@ -2,8 +2,6 @@ import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColum
 import "reflect-metadata";
 import { Historic } from './historicEntitie';
 
-
-
 @Entity()
 export class Video extends BaseEntity{
     @PrimaryGeneratedColumn()
@@ -20,9 +18,5 @@ export class Video extends BaseEntity{
 
     @Column()
     transcript!: string; 
-
-    
-
-
 
 }
