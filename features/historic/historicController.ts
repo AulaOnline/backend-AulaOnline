@@ -66,12 +66,12 @@ router.delete('/deleteVideoInHistoric/:idUser', async (req, res) => {
   }
 })
 
-//Obtém um vídeo específico apartir do id do próprio
-router.get('/getVideoByTittle/:idUser/:video', async (req, res) => {
+//Obtém um vídeo específico apartir do titulo do próprio
+router.get('/getVideoByTittle/:idUser', async (req, res) => {
    try {
-    const VideoTittle: string = req.params.video;
+    const { tittle } = req.body;
     const IdUser: string =req.params.idUser;
-    const Video = await NewHistoricService.getVideoByTittle(IdUser,VideoTittle);
+    const Video = await NewHistoricService.getVideoByTittle(IdUser,tittle);
    return res.status(200).json(new CustomResponse(200, "Busca Feita Com Sucesso", Video));
   } catch (error) {
     console.error(error);
@@ -79,6 +79,8 @@ router.get('/getVideoByTittle/:idUser/:video', async (req, res) => {
   }
 })
 
+
+//ABAIXO NAO ESTA IMPLEMENTADO O SERVICE, NAO EXISTE ESSAS FUNCIONALIDADES
 //Exclui um vídeo especifico a partir do ID do próprio 
 router.delete('/deleteVideoInHistoric/:idUser/:videolink', async (req, res) => {
     try {

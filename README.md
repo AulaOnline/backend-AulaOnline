@@ -46,6 +46,42 @@ Este endpoint é usado para verificar as credenciais de um usuário, para fazer 
 
 - `username`: O nome de usuário do usuário a ser verificado.
 - `password`: A senha do usuário a ser verificado.
+---
+
+## Registra um novo Vídeo ao Histórico do Usuário (POST//postNewVideoInHistoric/:idUser)
+Este endpoint é usado para registrar um novo vídeo acessado pelo usuário em seu histórico.
+
+### Parâmetros 
+
+### - (queryParam)
+- `idUser`: O ID do usuário que está acessando o vídeo.
+### - (body)
+- `video_link`: O link do vídeo do YouTube que o usuário quer acessar e adicionar ao seu histórico
+---
+## Recupera Todos os Vídeos acessados por um Usuário no Hisórico(GET///getVideosInHistoric/:idUser)
+Este endpoint é usado para recuperar todos os vídeo já acessados pelo usuário em seu histórico.
+
+### Parâmetros  - (queryParam)
+- `idUser`: O ID do usuário que está acessando.
+---
+## Deleta Todos os Vídeos acessados por um Usuário no Hisórico(DELETE//deleteVideoInHistoric/:idUser)
+Este endpoint é usado para apagar todos os vídeo já acessados pelo usuário em seu histórico, no caso do usuário ser excluído.
+
+### Parâmetros  - (queryParam)
+- `idUser`: O ID do usuário que está acessando.
+---
+
+## Recupera Todos os Vídeos correspondentes ao um título especificado por um Usuário que estão em seu Hisórico(GET///getVideoByTittle/:idUser)
+Este endpoint é usado para acessar todos os vídeo no histórico de um usuário dado um título específico,faz uma busca.
+
+### Parâmetros  
+### - (queryParam)
+- `idUser`: O ID do usuário que está acessando.
+### - (body)
+- `tittle`: O nome do vídeo do YouTube que o usuário quer procurar em  seu histórico
+---
+
+
 
 
 

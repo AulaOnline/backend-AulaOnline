@@ -86,8 +86,8 @@ async deleteVideo(historicId: string, videoId: string): Promise<void> {
 
     const title = videoInfo.snippet.title;
     const duration = this.parseISO8601Duration(videoInfo.contentDetails.duration);
-    const transcript = "testeeee";
-    //await getVideoTranscript(videoId, apiKey);
+    const transcript = "testee";
+    //await this.getVideoTranscript(videoId, apiKey);
     console.log(title);
     console.log(duration);
     console.log(transcript);
@@ -98,6 +98,21 @@ async deleteVideo(historicId: string, videoId: string): Promise<void> {
     throw error;
   }
 }
+  async getVideoTranscript(videoId: string, apiKey: string) : Promise<string> {
+    try {
+      const response = await axios.get(`https://www.googleapis.com/youtube/v3/captions?videoId=${videoId}&key=${apiKey}&part=snippet`);
+
+      const captionInfo = response.data.items[0];
+      const captionId = captionInfo.id;
+
+      const transcriptResponse = await axios.get(`https://www.googleapis.com/youtube/v3/captions/${captionId}?key=${apiKey}&format=txt`);
+
+      return transcriptResponse.data;
+    } catch (error) {
+      console.error('Erro ao obter transcrição do vídeo do YouTube', error);
+      throw error;
+    }
+  }
 
 extractVideoId(videoLink: string): string {
   const match = videoLink.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
