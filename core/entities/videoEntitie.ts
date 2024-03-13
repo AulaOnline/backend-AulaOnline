@@ -3,7 +3,7 @@ import {Entity, PrimaryGeneratedColumn, Column, BaseEntity} from 'typeorm';
 @Entity()
 export class Video extends BaseEntity {
     @PrimaryGeneratedColumn()
-    video_id!: number;
+    video_id!: string;
 
     @Column()
     tittle!: string;
@@ -13,5 +13,4 @@ export class Video extends BaseEntity {
 
     @Column()
     video_link!: string;
-
 }
