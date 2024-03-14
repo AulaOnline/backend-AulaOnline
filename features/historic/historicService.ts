@@ -9,39 +9,35 @@ import { UsuarioNaoExiste } from "../login/validation/UserErrors";
 
 export default class HistoricService {
 
-  async postVideo(video_link: string): Promise <Video> {
-    try {
-      const { title, duration} = await this.getYouTubeVideoInfo(video_link, 'AIzaSyAP8NzNyRNglRy0lOJR8thFiRJzCfL6Oe0');
-      const video: Video = new Video();
-      video.tittle = title;
-      video.total_time = duration;
-      video.video_link = video_link;
-      return await AppDataSource.manager.save(video);
-    } catch (e){
-      throw new VideoNaoExiste(400, 'erro ao salvar o video no banco de dados');
-    }
-  }
+async postVideoAndHistoric(userId: string, video_link: string): Promise<Video> {
+  try {
+    const id = parseInt(userId);
+    const user = await User.findOne({ where: { id: id } });
+    if (!user)
+      throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
 
-  //CREATE
-  async postHistoricRegister(UserId: string, video: Video): Promise<Historic> {
-    try {
-      const id = parseInt(UserId);
-      const user = await User.findOne({where: {id:id}})
-            if (!user)
-                throw new UsuarioNaoExiste(404, "ID nao cadastrado no sistema");
-     
-      
-      const historic = new Historic();
-      historic.video = video;
-      historic.user_id = id;
+    let historicId = await this.getUserHistoric(id);
+    
+    // Criação do novo vídeo
+    const { title, duration } = await this.getYouTubeVideoInfo(video_link, 'AIzaSyAP8NzNyRNglRy0lOJR8thFiRJzCfL6Oe0');
+    const newVideo: Video = new Video();
+    newVideo.tittle = title; 
+    newVideo.total_time = duration;
+    newVideo.video_link = video_link;
+    newVideo.historic_id = historicId;
+    newVideo.watched_time = 0;
+    
+    // Salvando o novo vídeo
+    await AppDataSource.manager.save(newVideo);
 
-      await AppDataSource.manager.save(historic);
-      return historic;
-    } catch (error) {
-      console.error("Erro ao registrar vídeo:", error);
-      throw new Error("Erro ao registrar vídeo");
-    }
+    return newVideo;
+  } catch (error) {
+    console.error("Erro ao registrar vídeo:", error);
+    throw error; // Relançando a exceção capturada
   }
+}
+
+
 
   async getYouTubeVideoInfo(videoLink: string, apiKey: string): Promise<{ title: string; duration: number;}> {
     try {
@@ -79,75 +75,77 @@ export default class HistoricService {
   }
 
   //READ
-  async getVideos(Id: string): Promise<Historic[]> {
-    const id = parseInt(Id);
-    const user = await User.findOne({where: {id:id}})
-            if (!user)
-                throw new UsuarioNaoExiste(404, "ID nao cadastrado no sistema");
-    try {
-      const videos =  await Historic.find({where: {user_id: id}, relations: ['video']});
-      if(!videos){
-        throw new UsarioSemHistorico(404, "Usuário não tem vídeos a serem exibidos");
-      }
-      else{
-        return videos;
-      }
+  async getVideos(userId: string): Promise<Video[]> {
+        const id = parseInt(userId);
+        const user = await User.findOne({ where: { id: id } });
+        if (!user)
+            throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
 
-    } catch (error) {
-      console.error("Erro ao buscar vídeos:", error);
-      throw error;
+        try {
+            const historic = await Historic.find({ where: { user_id: user } });
+            if (!historic || historic.length === 0) {
+                throw new UsarioSemHistorico(404, "Usuário não tem vídeos a serem exibidos");
+            }
+
+            // Agora vamos buscar os vídeos associados ao histórico
+           const videos: Video[] = [];
+            for (const hist of historic) {
+                const histVideos = await Video.find({ where: { historic_id: hist.historic_id } });
+                videos.push(...histVideos);
+            }
+
+            return videos;
+        } catch (error) {
+            console.error("Erro ao buscar vídeos:", error);
+            throw error;
+        }
     }
-  }
-
-
-
 
   //DELETE
-  async deleteAllVideos(Id: string): Promise<void> {
-    try {
-      const id = parseInt(Id);
-      const user = await User.findOne({where: {id:id}})
+    async deleteAllVideos(userId: string): Promise<void> {
+        try {
+            const id = parseInt(userId);
+            const user = await User.findOne({ where: { id: id } });
             if (!user)
-                throw new UsuarioNaoExiste(404, "ID nao cadastrado no sistema");
-      const videos = await Historic.delete({ user_id: id });
-      if(!videos){
-        throw new UsarioSemHistorico(404, "Usuário não tem vídeos a serem deletados");
-      }
-    } catch (error) {
-      console.error("Erro ao deletar todos os vídeos:", error);
-      throw error;
+                throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+
+            const historic = await Historic.find({ where: { user_id: user } });
+            if (!historic || historic.length === 0) {
+                throw new UsarioSemHistorico(404, "Usuário não tem vídeos a serem deletados");
+            }
+
+            // Para cada histórico encontrado, excluímos os vídeos associados
+            await Promise.all(historic.map(async hist => {
+                await Video.delete({ historic_id: hist.historic_id });
+            }));
+        } catch (error) {
+            console.error("Erro ao deletar todos os vídeos:", error);
+            throw error;
+        }
     }
-  }
-  async getVideoByTittle(IdUser: string, VideoTittle: string): Promise<Historic | undefined> {
-    try {
-      const id = parseInt(IdUser);
-      const user = await User.findOne({where: {id:id}})
+
+    async getVideoByTittle(userId: string, videoTittle: string): Promise<Historic | undefined> {
+        try {
+            const id = parseInt(userId);
+            const user = await User.findOne({ where: { id: id } });
             if (!user)
-                throw new UsuarioNaoExiste(404, "ID nao cadastrado no sistema");
-      const video = await Historic.findOne({ where: { user_id: id, video: { tittle: VideoTittle } }, relations: ['video'] });
-      if (video) {
-        return video;
-      } else {
-        throw new VideoNaoExiste(404, "Video não encontrado no histórico do usuário.");
-      }
-    } catch (error) {
-      console.error("Erro ao buscar vídeo pelo título:", error);
-      throw error;
+                throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+
+            const historic = await Historic.findOne({ where: { user_id: user } });
+            if (!historic)
+                throw new UsarioSemHistorico(404, "Usuário não tem vídeos a serem deletados");
+
+            // Agora buscamos o vídeo pelo título dentro do histórico
+            const video = await Video.findOne({ where: { historic_id: historic.historic_id, tittle: videoTittle } });
+            if (!video) {
+                throw new VideoNaoExiste(404, "Vídeo não encontrado no histórico do usuário.");
+            }
+            return historic;
+        } catch (error) {
+            console.error("Erro ao buscar vídeo pelo título:", error);
+            throw error;
+        }
     }
-  }
-
-
-  async updateVideo(Id: string, Atributo: string, NewValor: string) {
-    throw new Error('Method not implemented.');
-  }
-  async getAtributoVideo(Id: string, Atributo: string): Promise<any> {
-
-  }
-
-  async deleteVideo(historicId: string, videoId: string): Promise<void> {
-
-  }
-
 
 
   //auxiliaries methods  -  it's not a CRUD
@@ -172,6 +170,24 @@ export default class HistoricService {
     const match = videoLink.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     return match ? match[1] : '';
   }
+
+  async getUserHistoric(userId: number): Promise<number> {
+        const user = await User.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new UsuarioNaoExiste(404, "Usuário não encontrado");
+        }
+
+        let historic = await Historic.findOne({ where: { user_id: user } });
+        if (!historic) {
+            historic = new Historic();
+            historic.user_id = user;
+            await historic.save();
+        }
+
+        return historic.historic_id;
+    }
+
+
 
 
 }

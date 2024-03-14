@@ -8,19 +8,17 @@ import { Video } from '../../core/entities/videoEntitie';
 
 const NewHistoricService = new HistoricService();
 //CREATE
-//Cria um novo registro no histórico associado a um vídeo.
 router.post('/postNewVideoInHistoric/:idUser', async (req, res) => {
   try {
     const { video_link } = req.body;
     const userId = req.params.idUser;
 
-    const newVideo: Video = await NewHistoricService.postVideo(video_link);
-    const newHistoric :Historic = await NewHistoricService.postHistoricRegister(userId, newVideo);
+    const newVideo: Video = await NewHistoricService.postVideoAndHistoric(userId, video_link);
 
     return res.status(201).json({
       status: 201,
       message: 'Vídeo adicionado com sucesso',
-      newHistoric
+      newVideo
     });
   } catch (error) {
     console.error(error);
@@ -41,7 +39,7 @@ router.get('/getVideosInHistoric/:idUser', async (req, res) => {
   }
 })
 //DELETE
-router.delete('/deleteVideoInHistoric/:idUser', async (req, res) => {
+/*router.delete('/deleteVideoInHistoric/:idUser', async (req, res) => {
   try {
     const Id: string = req.params.idUser;
     const Video: string = req.body.videolink;
@@ -51,7 +49,7 @@ router.delete('/deleteVideoInHistoric/:idUser', async (req, res) => {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
-})
+})*/
 //Exclui TODOS vídeos do histórico.
 router.delete('/deleteAllVideoInHistoric/:idUser', async (req, res) => {
   try {
