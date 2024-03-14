@@ -40,8 +40,6 @@ router.get('/getVideosInHistoric/:idUser', async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 })
-
-
 //DELETE
 router.delete('/deleteVideoInHistoric/:idUser', async (req, res) => {
   try {

@@ -43,7 +43,7 @@ export default class HistoricService {
     }
   }
 
-  async getYouTubeVideoInfo(videoLink: string, apiKey: string): Promise<{ title: string; duration: number; transcript: string }> {
+  async getYouTubeVideoInfo(videoLink: string, apiKey: string): Promise<{ title: string; duration: number;}> {
     try {
       const videoId = this.extractVideoId(videoLink);
 
@@ -53,9 +53,9 @@ export default class HistoricService {
 
       const title = videoInfo.snippet.title;
       const duration = this.parseISO8601Duration(videoInfo.contentDetails.duration);
-      const transcript = await this.getVideoTranscript(videoId, apiKey);
+      //const transcript = await this.getVideoTranscript(videoId, apiKey);
 
-      return { title, duration, transcript };
+      return { title, duration };
     } catch (error) {
       console.error('Erro ao obter informações do vídeo do YouTube', error);
       throw error;

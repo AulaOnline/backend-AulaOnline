@@ -9,8 +9,6 @@ export class Annotation extends BaseEntity{
     @Column()
     tittle!: string;
 
-    @Column()
+    @Column('text')
     body!: string;
-
-   
 }

@@ -38,9 +38,10 @@ export default class UserService {
         }
     }
 
-    async getUserAttributeByID(userID: number, attribute: string){
+    async getUserAttributeByID(userID: string, attribute: string){
+        const id: number = parseInt(userID, 10);
         try {
-            const user = await User.findOne({where: {id:userID}})
+            const user = await User.findOne({where: {id:id}})
             if (!user)
                 throw new IDInvalido(404, "ID nao cadastrado no sistema");
 

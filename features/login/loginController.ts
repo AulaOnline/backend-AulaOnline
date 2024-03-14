@@ -46,9 +46,9 @@ router.get('/getUsers', async (req, res) => {
         return res.status(500).json(new CustomResponse(500, "Erro Interno Do Servidor", null));
     }
 });
-router.get('/getUserById/:id', async (req, res) => {
+router.get('/getUserById/:userID', async (req, res) => {
     const NewUserService: UserService = new UserService();
-    const userID : string = req.params.id;
+    const userID : string = req.params.userID;
     try {
         const user: User = await NewUserService.getUserByID(userID);
         user.password = "";
@@ -60,9 +60,9 @@ router.get('/getUserById/:id', async (req, res) => {
     }
 })
 
-router.get('/getUserAttributeByID', async (req, res) => {
+router.get('/getUserAttributeByID/:userID', async (req, res) => {
     const userAttribute: string = req.body.attribute;
-    const userID: number = req.body.id;
+    const userID: string = req.params.userID;
     try {
         await UserValidations.isValidAttribute(userAttribute);
         const NewUserService = new UserService();

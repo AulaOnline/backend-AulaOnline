@@ -7,7 +7,7 @@ import { AnnotationNaoExiste } from './validation/annotationErrors';
 const router = express.Router();
 const annotationService = new AnnotationService();
 
-router.post('/postNewNotation', async (req, res) => {
+router.post('/postNewNotation/:userId', async (req, res) => {
     try {
         const {videoId, title, body } = req.body;
         const newAnnotation = await annotationService.postNewNotation(videoId, title, body);
