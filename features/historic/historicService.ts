@@ -1,9 +1,11 @@
 import {Historic} from "../../core/entities/historicEntitie";
 import {Video} from "../../core/entities/videoEntitie";
 import {AppDataSource} from "../../app";
-import {VideoNaoExiste} from "./validation/HistoricErrors";
+import {UsarioSemHistorico, VideoNaoExiste} from "./validation/HistoricErrors";
 import axios from 'axios';
 import {YoutubeTranscript} from 'youtube-transcript';
+import { User } from "../../core/entities/userEntitie";
+import { UsuarioNaoExiste } from "../login/validation/UserErrors";
 
 export default class HistoricService {
 
@@ -24,6 +26,11 @@ export default class HistoricService {
   async postHistoricRegister(UserId: string, video: Video): Promise<Historic> {
     try {
       const id = parseInt(UserId);
+      const user = await User.findOne({where: {id:id}})
+            if (!user)
+                throw new UsuarioNaoExiste(404, "ID nao cadastrado no sistema");
+     
+      
       const historic = new Historic();
       historic.video = video;
       historic.user_id = id;
@@ -74,8 +81,18 @@ export default class HistoricService {
   //READ
   async getVideos(Id: string): Promise<Historic[]> {
     const id = parseInt(Id);
+    const user = await User.findOne({where: {id:id}})
+            if (!user)
+                throw new UsuarioNaoExiste(404, "ID nao cadastrado no sistema");
     try {
-      return await Historic.find({where: {user_id: id}, relations: ['video']});
+      const videos =  await Historic.find({where: {user_id: id}, relations: ['video']});
+      if(!videos){
+        throw new UsarioSemHistorico(404, "Usuário não tem vídeos a serem exibidos");
+      }
+      else{
+        return videos;
+      }
+
     } catch (error) {
       console.error("Erro ao buscar vídeos:", error);
       throw error;
@@ -89,7 +106,13 @@ export default class HistoricService {
   async deleteAllVideos(Id: string): Promise<void> {
     try {
       const id = parseInt(Id);
-      await Historic.delete({ user_id: id });
+      const user = await User.findOne({where: {id:id}})
+            if (!user)
+                throw new UsuarioNaoExiste(404, "ID nao cadastrado no sistema");
+      const videos = await Historic.delete({ user_id: id });
+      if(!videos){
+        throw new UsarioSemHistorico(404, "Usuário não tem vídeos a serem deletados");
+      }
     } catch (error) {
       console.error("Erro ao deletar todos os vídeos:", error);
       throw error;
@@ -98,8 +121,10 @@ export default class HistoricService {
   async getVideoByTittle(IdUser: string, VideoTittle: string): Promise<Historic | undefined> {
     try {
       const id = parseInt(IdUser);
+      const user = await User.findOne({where: {id:id}})
+            if (!user)
+                throw new UsuarioNaoExiste(404, "ID nao cadastrado no sistema");
       const video = await Historic.findOne({ where: { user_id: id, video: { tittle: VideoTittle } }, relations: ['video'] });
-
       if (video) {
         return video;
       } else {

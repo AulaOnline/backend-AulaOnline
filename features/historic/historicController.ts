@@ -9,7 +9,6 @@ import { Video } from '../../core/entities/videoEntitie';
 const NewHistoricService = new HistoricService();
 //CREATE
 //Cria um novo registro no histórico associado a um vídeo.
-//1º dado um link de um video na aplicação (INPUT) vai adciionar esse video na tabela de videos do usuario e no historico
 router.post('/postNewVideoInHistoric/:idUser', async (req, res) => {
   try {
     const { video_link } = req.body;

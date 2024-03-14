@@ -58,7 +58,7 @@ Este endpoint é usado para registrar um novo vídeo acessado pelo usuário em s
 ### - (body)
 - `video_link`: O link do vídeo do YouTube que o usuário quer acessar e adicionar ao seu histórico
 ---
-## Recupera Todos os Vídeos acessados por um Usuário no Hisórico(GET///getVideosInHistoric/:idUser)
+## Recupera Todos os Vídeos acessados por um Usuário no Hisórico(GET//getVideosInHistoric/:idUser)
 Este endpoint é usado para recuperar todos os vídeo já acessados pelo usuário em seu histórico.
 
 ### Parâmetros  - (queryParam)
@@ -71,7 +71,7 @@ Este endpoint é usado para apagar todos os vídeo já acessados pelo usuário e
 - `idUser`: O ID do usuário que está acessando.
 ---
 
-## Recupera Todos os Vídeos correspondentes ao um título especificado por um Usuário que estão em seu Hisórico(GET///getVideoByTittle/:idUser)
+## Recupera Todos os Vídeos correspondentes ao um título especificado por um Usuário que estão em seu Hisórico(GET//getVideoByTittle/:idUser)
 Este endpoint é usado para acessar todos os vídeo no histórico de um usuário dado um título específico,faz uma busca.
 
 ### Parâmetros  
