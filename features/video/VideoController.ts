@@ -1,19 +1,19 @@
 import express from 'express';
 import CustomResponse from "../../core/model/customResponse";
-import { Historic } from "../../core/entities/historicEntitie";
 const router = express.Router();
-import HistoricService from './historicService';
 import { Video } from '../../core/entities/videoEntitie';
+import VideoService from "./VideoService";
 
 
-const NewHistoricService = new HistoricService();
+const videoService = new VideoService();
+
 //CREATE
-router.post('/postNewVideoInHistoric/:idUser', async (req, res) => {
+router.post('/postNewVideo/:idUser', async (req, res) => {
   try {
-    const { video_link } = req.body;
     const userId = req.params.idUser;
+    const { video_link } = req.body;
 
-    const newVideo: Video = await NewHistoricService.postVideoAndHistoric(userId, video_link);
+    const newVideo: Video = await videoService.postVideo(userId, video_link);
 
     return res.status(201).json({
       status: 201,
@@ -27,42 +27,28 @@ router.post('/postNewVideoInHistoric/:idUser', async (req, res) => {
 })
 
 //READ
-//Obtém uma lista de TODOS os vídeos no histórico do usuário.
-router.get('/getVideosInHistoric/:idUser', async (req, res) => {
+router.get('/getVideosOfUser/:idUser', async (req, res) => {
   try {
     const Id: string = req.params.idUser;
-    const Videos = await NewHistoricService.getVideos(Id);
+    const Videos: Video[] = await videoService.getAllVideosByID(Id);
     return res.status(200).json(new CustomResponse(200, "Busca Feita Com Sucesso", Videos));
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 })
+
 //DELETE
-/*router.delete('/deleteVideoInHistoric/:idUser', async (req, res) => {
-  try {
-    const Id: string = req.params.idUser;
-    const Video: string = req.body.videolink;
-    const Deleted = await NewHistoricService.deleteVideo(Id, Video);
-    return res.status(204).json(new CustomResponse(204, "Video deletado Com Sucesso", Deleted));
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-})*/
-//Exclui TODOS vídeos do histórico.
 router.delete('/deleteAllVideoInHistoric/:idUser', async (req, res) => {
   try {
     const Id: string = req.params.idUser;
-    const Deleted = await NewHistoricService.deleteAllVideos(Id);
+    const Deleted = await videoService.deleteAllVideos(Id);
     return res.status(204).json(new CustomResponse(204, "Videos deletados Com Sucesso", Deleted));
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 })
-
-
 
 export default router;
 

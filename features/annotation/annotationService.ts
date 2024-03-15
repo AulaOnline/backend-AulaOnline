@@ -1,74 +1,41 @@
 // annotationService.ts
 
-import { Annotation } from "../../core/entities/annotationEntitie";
+import { Annotation } from "../../core/entities/AnnotationEntitie";
 import { AppDataSource } from "../../app";
 import { AnnotationNaoExiste } from "./validation/annotationErrors";
+import {Video} from "../../core/entities/videoEntitie";
+import {User} from "../../core/entities/userEntitie";
+import {UsuarioNaoExiste} from "../login/validation/UserErrors";
 
 export default class AnnotationService {
-    async postNewNotation(videoId: string, title: string, body: string) {
+    async postNewNotation(title: string, body: string, videoLink: string, userID: string, ) {
+        const id: number = parseInt(userID);
         try {
-            const annotation = new Annotation();
-            
-            annotation.annotation_id = videoId;
-            annotation.tittle = title;
-            annotation.body = body;
-            
-            await AppDataSource.manager.save(annotation);
-            
-            return annotation;
+            const user: User | null = await User.findOne({ where: { id: id } });
+            if (!user)
+                throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+            if (videoLink === null)
+                throw new UsuarioNaoExiste(404, "Link Invalido");
+
+            const video: Video | null = await Video.findOne({
+                where: {
+                    user: user,
+                    video_link: videoLink
+                }
+            });
+
+            if (video){
+                const annotation: Annotation = new Annotation();
+                annotation.tittle = title;
+                annotation.body = body;
+                annotation.video = video;
+                await AppDataSource.manager.save(annotation);
+                return video;
+            }
+
         } catch (error) {
             console.error("Erro ao salvar nova anotação:", error);
             throw new Error("Erro ao salvar nova anotação");
         }
     }
-
-    async getNotationAboutVideo(videoId: string) {
-        try {
-            const annotations = await Annotation.find({ where: { annotation_id: videoId } });
-            return annotations;
-        } catch (error) {
-            console.error("Erro ao obter anotações sobre o vídeo:", error);
-            throw error;
-        }
-    }
-
-   
-    async updateAtributoNotation(notationId: string, atributo: string, valor: string) {
-        try {
-            const annotation = await Annotation.findOne({ where: { annotation_id: notationId } });
-            if (!annotation) {
-                throw new AnnotationNaoExiste(404, "Anotação não encontrada.");
-            }
-    
-            if (atributo === "title") {
-                annotation.tittle = valor;
-            } else if (atributo === "body") {
-                annotation.body = valor;
-            } else {
-                throw new Error("Atributo inválido.");
-            }
-    
-            await AppDataSource.manager.save(annotation);
-            
-            return annotation;
-        } catch (error) {
-            console.error("Erro ao atualizar atributo da anotação:", error);
-            throw error;
-        }
-    }
-    
-
-    async deleteNotationAboutVideo(notationId: string) {
-        try {
-            const annotation = await Annotation.findOne({ where: { annotation_id: notationId } });
-            if (!annotation) {
-                throw new AnnotationNaoExiste(404, "Anotação não encontrada.");
-            }
-    
-            await AppDataSource.manager.remove(annotation);
-        } catch (error) {
-            console.error("Erro ao excluir anotação:", error);
-            throw error;
-        }
-    }    
 }

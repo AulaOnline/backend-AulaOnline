@@ -1,13 +1,18 @@
-import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, JoinColumn, OneToOne, ManyToOne} from 'typeorm';
-import { Historic } from './historicEntitie';
+import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn} from 'typeorm';
+import { User } from './userEntitie';
+import { Annotation } from "./AnnotationEntitie";
 
 @Entity()
 export class Video extends BaseEntity {
     @PrimaryGeneratedColumn()
     video_id!: string;
 
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'user_id' })
+    user!: User;
+
     @Column()
-    tittle!: string; 
+    title!: string;
 
     @Column()
     total_time!: number;
@@ -17,8 +22,4 @@ export class Video extends BaseEntity {
 
     @Column()
     video_link!: string;
-
-    @ManyToOne(() => Historic)
-    @JoinColumn({ name: 'historic_id' })
-    historic_id!: number;
 }

@@ -10,6 +10,6 @@ export class DuracaoVideoInvalida extends Error {
     constructor(public type:number, message: string) {super(message); this.type = type}
 }
 
-export class UsarioSemHistorico extends Error {
+export class UsuarioSemHistorico extends Error {
     constructor(public type:number, message: string) {super(message); this.type = type}
 }
