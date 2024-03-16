@@ -64,6 +64,20 @@ export default class VideoService {
             throw error;
         }
     }
+    async deleteVideo(userId: string, videoLink: string): Promise<void> {
+        try {
+            const id: number = parseInt(userId);
+            const user: User | null = await User.findOne({ where: { id: id } });
+            if (!user)
+                throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+
+            await Video.delete({ user: user, video_link: videoLink });
+
+        } catch (error) {
+            console.error("Erro ao deletar todos os vídeos:", error);
+            throw error;
+        }
+    }
 
 
 

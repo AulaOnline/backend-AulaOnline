@@ -49,6 +49,17 @@ router.delete('/deleteAllVideoInHistoric/:idUser', async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 })
+router.delete('/deleteOneVideoInHistoric/:idUser', async (req, res) => {
+  try {
+    const Id: string = req.params.idUser;
+    const { video_link } = req.body;
+    const Deleted = await videoService.deleteVideo(Id, video_link);
+    return res.status(204).json(new CustomResponse(204, "Videos deletados Com Sucesso", Deleted));
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
 
 export default router;
 

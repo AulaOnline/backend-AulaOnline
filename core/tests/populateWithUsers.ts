@@ -49,7 +49,6 @@ const usersData: User[] = [
     { email: 'ryan.white@example.com', username: 'ryanWhite', password: 'senha1234' },
     { email: 'justin.harris@example.com', username: 'justinHarris', password: 'senha1234' },
     { email: 'nicole.brown@example.com', username: 'nicoleBrown', password: 'senha1234' }
-
 ];
 
 async function createUser(user: User) {
