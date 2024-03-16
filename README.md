@@ -95,4 +95,22 @@ Nesta API todas as requisições vem com uma Resposta Padrão, todas as requisi�
 > #### Resposta
 > - **Status 201**: `Anotação Cadastrada Com Sucesso`. Retorna os detalhes da anotação cadastrada.
 
+### - Recupera Todas as Anotações de um Usuário (GET /getAllNotations/:userId)
+> Retorna todas as anotações associadas a um usuário específico pelo id.
+> #### Parâmetros - (queryParam)
+> - `userId`: O ID do usuário do qual as anotações serão recuperadas.
+> #### Resposta
+> - **Status 201**: `Anotação Cadastrada Com Sucesso`. Retorna uma lista de todas as anotações do usuário especificado.
+
+### - Recupera uma Anotação Específica de um Usuário (GET /getNotation/:userId)
+> Retorna uma anotação específica baseada no link de um vídeo e no ID de um usuário.
+> #### Parâmetros - (PathParam)
+> - `userId`: O ID do usuário associado à anotação.
+> #### Parâmetros - (Body)
+> - `videoLink`: O link do vídeo relacionado à anotação que está sendo buscada.
+> #### Resposta
+> - **Status 201**: `Anotação Cadastrada Com Sucesso`. Retorna os detalhes da anotação especificada.
+
+
+
 

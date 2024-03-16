@@ -8,6 +8,10 @@ export class Annotation extends BaseEntity{
     @PrimaryGeneratedColumn()
     annotation_id!: number;
 
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'user_id' })
+    user!: User;
+
     @ManyToOne(() => Video)
     @JoinColumn({ name: 'video_id' })
     video!: Video;
@@ -17,5 +21,4 @@ export class Annotation extends BaseEntity{
 
     @Column('text')
     body!: string;
-
 }
