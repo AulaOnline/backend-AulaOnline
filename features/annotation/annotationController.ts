@@ -1,5 +1,4 @@
 // annotationController.ts
-
 import express from 'express';
 import AnnotationService from './annotationService';
 import { AnnotationNaoExiste } from './validation/annotationErrors';
@@ -41,6 +40,17 @@ router.get('/getNotation/:userId', async (req, res) => {
         const userID: string = req.params.userId
         const notation: Annotation= await annotationService.getNotation(userID, videoLink);
         return res.status(201).json(new CustomResponse(201, "Anotacao Cadastrada Com Sucesso", notation));
+    } catch (error) {
+        return res.status(500).json(new CustomResponse(404, "Bad Request", error));
+    }
+});
+
+//Delete
+router.delete('/deleteAllNotationOfUser/:userId', async (req, res) => {
+    try {
+        const userID: string = req.params.userId
+        await annotationService.deleteAllNotationsOfUser(userID);
+        return res.status(201).json(new CustomResponse(201, "Anotacao Delet Com Sucesso", null));
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Erro interno do servidor' });

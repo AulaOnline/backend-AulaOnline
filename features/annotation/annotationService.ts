@@ -87,4 +87,15 @@ export default class AnnotationService {
             throw error; // Ou manuseie o erro conforme necessário
         }
     }
+
+    async deleteAllNotationsOfUser(userID: string) {
+        const id: number = parseInt(userID);
+        try {
+            const user: User | null = await User.findOne({ where: {id: id}})
+            if (!user) throw new UsuarioNaoExiste(404, "Usuario Nao existe Nos Sistema");
+            await Annotation.delete({  user: user  });
+        } catch (error) {
+            throw error;
+        }
+    }
 }

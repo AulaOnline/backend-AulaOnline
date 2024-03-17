@@ -57,7 +57,7 @@ router.delete('/deleteOneVideoInHistoric/:idUser', async (req, res) => {
     return res.status(204).json(new CustomResponse(204, "Videos deletados Com Sucesso", Deleted));
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(404).json(new CustomResponse(404, "Bad Request", error));
   }
 })
 
