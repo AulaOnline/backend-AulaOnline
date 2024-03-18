@@ -34,7 +34,7 @@ router.get('/getVideosOfUser/:idUser', async (req, res) => {
     return res.status(200).json(new CustomResponse(200, "Busca Feita Com Sucesso", Videos));
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'filipe gatinho' });
   }
 })
 

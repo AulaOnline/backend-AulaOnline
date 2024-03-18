@@ -60,6 +60,22 @@ router.get('/getUserById/:userID', async (req, res) => {
     }
 })
 
+router.get('/getUserID/:username', async (req, res) => {
+    try {
+        const username = req.params.username;
+        const user = await User.findOne({ where: { username: username } });
+
+        if (user) {
+            return res.status(200).json({ userID: user.id });
+        } else {
+            return res.status(404).json({ error: 'Usuário não encontrado' });
+        }
+    } catch (err) {
+        console.error('Erro ao buscar o ID do usuário:', err);
+        return res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
 router.get('/getUserAttributeByID/:userID', async (req, res) => {
     const userAttribute: string = req.body.attribute;
     const userID: string = req.params.userID;
