@@ -111,6 +111,20 @@ Nesta API todas as requisições vem com uma Resposta Padrão, todas as requisi�
 > #### Resposta
 > - **Status 201**: `Anotação Cadastrada Com Sucesso`. Retorna os detalhes da anotação especificada.
 
+# /generate
+
+---
+
+### - Gera o Resumo de um video pelo link(GET /getSummary/)
+> Retorna o resumo de um video pelo link
+> 
+> #### Parâmetros - (Body)
+> - `videoLink`: O link do vídeo relacionado ao resumo que está sendo gerado.
+> #### Resposta
+> - **Status 201**: `Chamada Feita`. Retorna os resumo.
+> - > #### CUIDADO AO LIDAR COM ESSE ENDPOINT CADA REQUISICAO FEITA POR ELE EH COBRADA NA API DA OPENAI
+>
+
 
 
 

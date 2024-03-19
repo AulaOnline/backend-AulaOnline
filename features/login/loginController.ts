@@ -13,6 +13,7 @@ interface UserCredentials {
   password: string
 }
 
+
 router.post('/createUser', async (req, res) => {
     const { email, username, password }: UserCredentials = req.body;
     try {

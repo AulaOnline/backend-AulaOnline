@@ -1,26 +1,23 @@
 import express from 'express'
 import cors from 'cors'
-const PORT = process.env.PORT || 3001
-const HOSTNAME = process.env.HOSTNAME || 'http://localhost'
+import dotenv from 'dotenv';
+dotenv.config();
+const PORT = process.env.PORT
+const HOSTNAME = process.env.HOSTNAME
 const app = express()
 import customResponse from './core/model/customResponse';
-
 import loginController from './features/login/loginController';
 import videoController from './features/video/VideoController';
-
-
+import aiController from "./features/AIgenerations/aiController";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-
-
 import { User } from "./core/entities/userEntitie";
 import { Video } from './core/entities/videoEntitie';
 import { Annotation } from './core/entities/AnnotationEntitie';
-
 const cookieParser = require('cookie-parser');
-import dotenv from 'dotenv';
 import annotationController from "./features/annotation/annotationController";
 dotenv.config();
+
 
 const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASSWORD;
@@ -56,6 +53,7 @@ app.use(cors({
 app.use('/login', loginController);
 app.use('/video', videoController);
 app.use('/annotation', annotationController);
+app.use('/openai', aiController)
 
 
 app.use((req, res) => {

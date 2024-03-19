@@ -100,7 +100,6 @@ export default class VideoService {
     async getYouTubeVideoInfo(videoLink: string, apiKey: string): Promise<{ title: string; duration: number;}> {
         try {
             const videoId = this.extractVideoId(videoLink);
-
             const response = await axios.get(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet,contentDetails`);
 
             const videoInfo = response.data.items[0];
@@ -112,21 +111,6 @@ export default class VideoService {
             return { title, duration };
         } catch (error) {
             console.error('Erro ao obter informações do vídeo do YouTube', error);
-            throw error;
-        }
-    }
-    async getVideoTranscript(videoId: string, apiKey: string): Promise<string> {
-        try {
-            // Obtém as informações das legendas/captions do vídeo
-            const response = await axios.get(`https://www.googleapis.com/youtube/v3/captions?videoId=${videoId}&key=${apiKey}&part=snippet`);
-            const captionInfo = response.data.items[0];
-            const captionId = captionInfo.id;
-
-            const transcript = await YoutubeTranscript.fetchTranscript(videoId);
-
-            return transcript.map((entry) => entry.text).join(' ');
-        } catch (error) {
-            console.error('Erro ao obter transcrição do vídeo do YouTube', error);
             throw error;
         }
     }
