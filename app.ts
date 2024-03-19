@@ -14,6 +14,7 @@ import { DataSource } from "typeorm";
 import { User } from "./core/entities/userEntitie";
 import { Video } from './core/entities/videoEntitie';
 import { Annotation } from './core/entities/AnnotationEntitie';
+import {Summary} from "./core/entities/summaryEntitie";
 const cookieParser = require('cookie-parser');
 import annotationController from "./features/annotation/annotationController";
 dotenv.config();
@@ -30,7 +31,7 @@ export const AppDataSource = new DataSource({
     password: dbPassword,
     //1º uso mudar para true:
     synchronize: false,
-    entities: [User, Video, Annotation]
+    entities: [User, Video, Annotation, Summary]
 })
 
 AppDataSource.initialize()
@@ -40,7 +41,7 @@ AppDataSource.initialize()
     .catch((error) => console.log(error))
 
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: true, }))
+app.use(express.urlencoded({ extended: true}))
 app.use(express.json());
 
 app.get('/', (req, res) => { res.send('Hello World!') })
@@ -53,7 +54,7 @@ app.use(cors({
 app.use('/login', loginController);
 app.use('/video', videoController);
 app.use('/annotation', annotationController);
-app.use('/openai', aiController)
+app.use('/generate', aiController)
 
 
 app.use((req, res) => {
