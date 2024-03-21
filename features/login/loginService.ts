@@ -2,6 +2,7 @@ import {User} from "../../core/entities/userEntitie";
 import {AppDataSource} from "../../app";
 import {CustomError} from "./validation/UserErrors";
 import CustomResponse from "../../core/model/customResponse";
+import {createTokens} from "../../core/infra/JWT";
 
 const bcrypt = require('bcrypt');
 export default class UserService {
@@ -37,33 +38,29 @@ export default class UserService {
 
     async getUserAttributeByID(userID: string, attribute: string){
         const id: number = parseInt(userID, 10);
-        try {
             const user = await User.findOne({where: {id:id}})
-            if (!user)
+            if (user == null)
                 throw CustomError.IDInvalido(404, "ID nao cadastrado no sistema");
-
-            switch (attribute.toLowerCase()){
-                case "email":
-                    return user.email;
-                case "username":
-                    return user.username;
-                default:
-                    throw CustomError.AtributoInvalido(404,"Atributo Invalido");
-            }
-        }catch (error){
-            return error;
-        }
+            if (attribute.toLowerCase() === "username")
+                return user.username;
+            if (attribute.toLowerCase() === "email")
+                return user.email;
     }
-    async isValidCredentials(user: User): Promise<boolean> {
-        try {
-            const existingUser: User | null = await User.findOne({where: {username: user.username}});
-            if (!existingUser) {
-                return false;
-            }
-            return await bcrypt.compare(user.password, existingUser.password);
-        } catch (error) {
-            console.error("Erro ao verificar credenciais do usuário:", error);
-            throw new Error("Erro ao verificar credenciais do usuário");
+    async isValidCredentials(username: string, password: string) {
+        const user: User = new User();
+        user.username = username;
+        user.password = password;
+
+        const existingUser: User | null = await User.findOne({where: {username: user.username}});
+        if (!existingUser)
+            throw CustomError.IDInvalido(404, "Credencias Incorretas");
+
+        if(!await bcrypt.compare(user.password, existingUser.password))
+            throw CustomError.SenhaInvalida(404, "Credencias Incorretas")
+        let token: string;
+        if (await bcrypt.compare(user.password, existingUser.password)) {
+            token = createTokens(existingUser)
+            return token;
         }
     }
 }

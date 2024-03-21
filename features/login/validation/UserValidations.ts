@@ -25,15 +25,23 @@ export class UserValidations {
         this.isOnlyNumbers(id);
         this.isNegative(id);
     }
+    public static async isValidAtributte(id: string, attribute: string): Promise<void> {
+        this.isOnlyNumbers(id);
+        this.isNegative(id);
+        this.isAttribute(attribute);
+    }
     public static async isValidUsername(username: string): Promise<void> {
         this.validateUsername(username);
+    }
+    public static async isValidCredentials(username: string, password: string): Promise<void> {
+        this.validateUsername(username);
+        this.validatePassword(password);
     }
 
     private static validateUsername(username: string): void {
         if (username.length < 3 || username.length > 20 || !isValidCharacters(username)) {
             throw CustomError.UsuarioJaExistente(400, "Nome do Usuario Invalido");
         }
-
         if (!isValidCharacters(username)) {
             throw CustomError.UsernameInvalido(400, "Formato Do Nome do Usuario Invalido");
         }
@@ -41,13 +49,11 @@ export class UserValidations {
 
     private static validatePassword(password: string): void {
         console.log(password.length);
-        if (password.length <= 3 || password.length > 20) {
+        if (password.length <= 3 || password.length > 20)
             throw CustomError.SenhaInvalida(400, "Tamanho Da Senha Invalido");
-        }
 
-        if (!isValidPassword(password)) {
+        if (!isValidPassword(password))
             throw CustomError.SenhaInvalida(400, "A senha deve ter Pelo menos um Numero");
-        }
     }
 
     private static validateEmail(email: string): void {
@@ -64,6 +70,17 @@ export class UserValidations {
         const NumberID = parseInt(id)
         if (NumberID <= 0)
             throw CustomError.IDInvalido(400, "ID do Usuario Nao Pode Ser Negativo");
+    }
+
+    private static isAttribute(attribute: string) {
+        switch (attribute.toLowerCase()){
+            case "email":
+                return;
+            case "username":
+                return;
+            default:
+                throw CustomError.AtributoInvalido(404,"Atributo Invalido");
+        }
     }
 }
 

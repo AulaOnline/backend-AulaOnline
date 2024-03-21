@@ -1,7 +1,6 @@
 // annotationController.ts
 import express from 'express';
 import AnnotationService from './annotationService';
-import { AnnotationNaoExiste } from './validation/annotationErrors';
 import CustomResponse from "../../core/model/customResponse";
 import {Annotation} from "../../core/entities/AnnotationEntitie";
 

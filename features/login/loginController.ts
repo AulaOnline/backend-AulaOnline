@@ -3,9 +3,8 @@ import CustomResponse from "../../core/model/customResponse";
 import {User} from "../../core/entities/userEntitie";
 import UserService from "./loginService";
 import {UserValidations} from "./validation/UserValidations";
-import { createTokens, isTokenValid } from '../../core/infra/JWT';
+import {isTokenValid } from '../../core/infra/JWT';
 const router = express.Router();
-const bcrypt = require('bcrypt');
 interface UserCredentials {
   id: number,
   email: string;
@@ -15,7 +14,6 @@ interface UserCredentials {
 
 const NewUserService:UserService = new UserService();
 
-//100%
 router.post('/createUser', async (req, res) => {
     const { email, username, password }: UserCredentials = req.body;
     try {
@@ -27,7 +25,6 @@ router.post('/createUser', async (req, res) => {
         return res.status(error.type).json(new CustomResponse(error.type, error.message, error));
     }
 });
-//100%
 router.get('/getUsers', async (req, res) => {
     try {
         const AllUsers: User[] = await NewUserService.getUsers();
@@ -36,7 +33,6 @@ router.get('/getUsers', async (req, res) => {
         return res.status(error.type).json(new CustomResponse(error.type, error.message, null));
     }
 });
-//100%
 router.get('/getUserById/:userID', async (req, res) => {
     const userID : string = req.params.userID;
     try {
@@ -49,7 +45,6 @@ router.get('/getUserById/:userID', async (req, res) => {
     }
 })
 
-//100%
 router.get('/getUserID/:username', async (req, res) => {
     const username = req.params.username;
     try {
@@ -65,41 +60,33 @@ router.get('/getUserAttributeByID/:userID', async (req, res) => {
     const userAttribute: string = req.body.attribute;
     const userID: string = req.params.userID;
     try {
+        await UserValidations.isValidAtributte(userID, userAttribute);
         const valorDoAtributo = await NewUserService.getUserAttributeByID(userID, userAttribute);
         return res.status(200).json(new CustomResponse(200, "Atributo encontrado com sucesso", valorDoAtributo))
-    } catch (error: Error | any){
-        if (error.type === 404)
-            return res.status(404).json(new CustomResponse(404, error.message, error));
-        else
-            return res.status(500).json(new CustomResponse(500, "Internal Server Error", error))
+    } catch (error: Error | any) {
+        return res.status(error.type).json(new CustomResponse(error.type, error.message, null));
     }
 })
+
+
+
 router.post('/checkCredentials', async (req, res) => {
     try{
         const {username, password } = req.body;
-        const user: User = new User();
-        user.username = username;
-        user.password = password;
-        if (await NewUserService.isValidCredentials(user)){
-            const token = createTokens(user)
-            return res.status(200).json(new CustomResponse(200, "Credenciais Corretas", {token : token}));
-        }
-        else
-            return res.status(400).json(new CustomResponse(400, "Credencias Inorretas", null));
-
-    } catch (err){
+        await UserValidations.isValidCredentials(username,password)
+        const token = await NewUserService.isValidCredentials(username, password);
+        return res.status(200).json(new CustomResponse(200, "Credenciais Corretas", {token : token}));
+    } catch (error: Error | any){
+        return res.status(error.type).json(new CustomResponse(error.type, error.message, null));
     }
 });
 
 router.post('/verificar-token', (req, res) => {
     const token = req.body.token; // Acessa o token no corpo da requisição
-
     if (!token) {
         return res.status(401).json({ success: false, message: 'Token não fornecido' });
     }
-
     const result = isTokenValid(token);
-
     if (result.valid) {
         return res.status(200).json({ success: true, message: 'Token válido', decoded: result.decoded });
     } else {
