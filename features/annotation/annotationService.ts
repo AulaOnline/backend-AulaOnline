@@ -1,11 +1,10 @@
 // annotationService.ts
-
 import { Annotation } from "../../core/entities/AnnotationEntitie";
 import { AppDataSource } from "../../app";
 import { AnnotationNaoExiste } from "./validation/annotationErrors";
 import {Video} from "../../core/entities/videoEntitie";
 import {User} from "../../core/entities/userEntitie";
-import {CustomError} from "../../features/login/validation/UserErrors";
+import {CustomUserError} from "../../features/login/validation/UserErrors";
 
 export default class AnnotationService {
     async postNewNotation(title: string, body: string, videoLink: string, userID: string, ) {
@@ -14,7 +13,7 @@ export default class AnnotationService {
         try {
             const user: User | null = await User.findOne({ where: { id: id } });
             if (!user)
-                throw CustomError.UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+                throw CustomUserError.UsuarioNaoExiste(404, "ID não cadastrado no sistema");
             if (videoLink === null)
                 throw  Error();
                 //throw new UsuarioNaoExiste(404, "Link Invalido");
@@ -93,7 +92,7 @@ export default class AnnotationService {
         const id: number = parseInt(userID);
         try {
             const user: User | null = await User.findOne({ where: {id: id}})
-            if (!user) throw  CustomError.UsuarioNaoExiste(404, "Usuario Nao existe Nos Sistema");
+            if (!user) throw  CustomUserError.UsuarioNaoExiste(404, "Usuario Nao existe Nos Sistema");
             await Annotation.delete({  user: user  });
         } catch (error) {
             throw error;

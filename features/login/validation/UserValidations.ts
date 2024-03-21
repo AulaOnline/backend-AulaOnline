@@ -1,5 +1,6 @@
-import {CustomError} from "./UserErrors";
+import {CustomUserError} from "./UserErrors";
 
+// === REGEX === //
 function isValidCharacters(string: string): boolean {
     //devolve falso se a string nao tiver pelo menos uma letras ou no maximo numeros, nenhum outro caractere eh valido
     return /^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(string)
@@ -40,36 +41,36 @@ export class UserValidations {
 
     private static validateUsername(username: string): void {
         if (username.length < 3 || username.length > 20 || !isValidCharacters(username)) {
-            throw CustomError.UsuarioJaExistente(400, "Nome do Usuario Invalido");
+            throw CustomUserError.UsuarioJaExistente(400, "Nome do Usuario Invalido");
         }
         if (!isValidCharacters(username)) {
-            throw CustomError.UsernameInvalido(400, "Formato Do Nome do Usuario Invalido");
+            throw CustomUserError.UsernameInvalido(400, "Formato Do Nome do Usuario Invalido");
         }
     }
 
     private static validatePassword(password: string): void {
         console.log(password.length);
         if (password.length <= 3 || password.length > 20)
-            throw CustomError.SenhaInvalida(400, "Tamanho Da Senha Invalido");
+            throw CustomUserError.SenhaInvalida(400, "Tamanho Da Senha Invalido");
 
         if (!isValidPassword(password))
-            throw CustomError.SenhaInvalida(400, "A senha deve ter Pelo menos um Numero");
+            throw CustomUserError.SenhaInvalida(400, "A senha deve ter Pelo menos um Numero");
     }
 
     private static validateEmail(email: string): void {
         if (email.length < 2 || !isValidEmail(email)) {
-            throw CustomError.EmailInvalido(400, "Email do Usuario Eh Invalido");
+            throw CustomUserError.EmailInvalido(400, "Email do Usuario Eh Invalido");
         }
     }
 
     private static isOnlyNumbers(id: string): void {
         if (!isOnlyNumbers(id))
-            throw CustomError.IDInvalido(400, "ID do Usuario Nao Pode Ser nao Numerico");
+            throw CustomUserError.IDInvalido(400, "ID do Usuario Nao Pode Ser nao Numerico");
     }
     private static isNegative(id: string): void {
         const NumberID = parseInt(id)
         if (NumberID <= 0)
-            throw CustomError.IDInvalido(400, "ID do Usuario Nao Pode Ser Negativo");
+            throw CustomUserError.IDInvalido(400, "ID do Usuario Nao Pode Ser Negativo");
     }
 
     private static isAttribute(attribute: string) {
@@ -79,7 +80,7 @@ export class UserValidations {
             case "username":
                 return;
             default:
-                throw CustomError.AtributoInvalido(404,"Atributo Invalido");
+                throw CustomUserError.AtributoInvalido(404,"Atributo Invalido");
         }
     }
 }

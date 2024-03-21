@@ -1,6 +1,6 @@
 import {User} from "../../core/entities/userEntitie";
 import {AppDataSource} from "../../app";
-import {CustomError} from "./validation/UserErrors";
+import {CustomUserError} from "./validation/UserErrors";
 import CustomResponse from "../../core/model/customResponse";
 import {createTokens} from "../../core/infra/JWT";
 
@@ -19,20 +19,20 @@ export default class UserService {
         try {
             return await AppDataSource.manager.save(NewUser);
         } catch (error) {
-            throw CustomError.ErroDeEscrita(500, "Erro ao Registrar Inforacao No Banco De Dados")}
+            throw CustomUserError.ErroDeEscrita(500, "Erro ao Registrar Inforacao No Banco De Dados")}
     }
     async getUserByID(userID: string): Promise<User> {
         const id: number = parseInt(userID, 10);
         const user: User | null = await User.findOne({ where: {id: id} });
         if (user === null)
-            throw CustomError.IDInvalido(404, "ID Nao Registrado");
+            throw CustomUserError.IDInvalido(404, "ID Nao Registrado");
         user.password = "";
         return user;
     }
     async getUserIDByUsername(username: string) {
         const user = await User.findOne({ where: { username: username } });
         if (user == null)
-            throw CustomError.UsernameInvalido(404, "Nao Existem Usuarios Com Esse Username")
+            throw CustomUserError.UsernameInvalido(404, "Nao Existem Usuarios Com Esse Username")
         return {id: user.id};
     }
 
@@ -40,7 +40,7 @@ export default class UserService {
         const id: number = parseInt(userID, 10);
             const user = await User.findOne({where: {id:id}})
             if (user == null)
-                throw CustomError.IDInvalido(404, "ID nao cadastrado no sistema");
+                throw CustomUserError.IDInvalido(404, "ID nao cadastrado no sistema");
             if (attribute.toLowerCase() === "username")
                 return user.username;
             if (attribute.toLowerCase() === "email")
@@ -53,10 +53,10 @@ export default class UserService {
 
         const existingUser: User | null = await User.findOne({where: {username: user.username}});
         if (!existingUser)
-            throw CustomError.IDInvalido(404, "Credencias Incorretas");
+            throw CustomUserError.IDInvalido(404, "Credencias Incorretas");
 
         if(!await bcrypt.compare(user.password, existingUser.password))
-            throw CustomError.SenhaInvalida(404, "Credencias Incorretas")
+            throw CustomUserError.SenhaInvalida(404, "Credencias Incorretas")
         let token: string;
         if (await bcrypt.compare(user.password, existingUser.password)) {
             token = createTokens(existingUser)
