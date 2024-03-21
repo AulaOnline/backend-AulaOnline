@@ -4,7 +4,6 @@ import {UsuarioSemHistorico, VideoNaoExiste} from "./validation/VideoErrors";
 import axios from 'axios';
 import {YoutubeTranscript} from 'youtube-transcript';
 import { User } from "../../core/entities/userEntitie";
-import { UsuarioNaoExiste } from "../login/validation/UserErrors";
 
 export default class VideoService {
     async postVideo(userId: string, video_link: string): Promise<Video> {
@@ -12,7 +11,7 @@ export default class VideoService {
         const id = parseInt(userId);
         const user = await User.findOne({ where: { id: id } });
         if (!user)
-          throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+          throw  Error();
 
         // Criação do novo vídeo
         const { title, duration } = await this.getYouTubeVideoInfo(video_link, 'AIzaSyAP8NzNyRNglRy0lOJR8thFiRJzCfL6Oe0');
@@ -35,7 +34,7 @@ export default class VideoService {
         const id: number = parseInt(userId);
         const user: User | null = await User.findOne({ where: { id: id } });
         if (!user)
-            throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+            throw  Error();
 
         try {
             const videos :Video[] = await Video.find({ where: { user: user } });
@@ -55,7 +54,8 @@ export default class VideoService {
             const id: number = parseInt(userId);
             const user: User | null = await User.findOne({ where: { id: id } });
             if (!user)
-                throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+                throw  Error();
+                //throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
 
             await Video.delete({ user: user  });
 
@@ -69,7 +69,8 @@ export default class VideoService {
             const id: number = parseInt(userId);
             const user: User | null = await User.findOne({ where: { id: id } });
             if (!user)
-                throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+                throw  Error();
+                //throw new UsuarioNaoExiste(404, "ID não cadastrado no sistema");
 
             await Video.delete({ user: user, video_link: videoLink });
 

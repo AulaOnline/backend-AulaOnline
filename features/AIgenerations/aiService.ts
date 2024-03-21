@@ -14,7 +14,6 @@ export default class AiService {
     async getSummary(videoLink: string){
         const alreadyGeneratedSummary = await this.isAlreadyGeneratedSummary(videoLink);
         if (alreadyGeneratedSummary!== undefined){
-            console.log("Funcionou");
             return alreadyGeneratedSummary;
         }
 
@@ -38,9 +37,8 @@ export default class AiService {
         const completion = await openai.chat.completions.create({
             messages: [
                 {"role": "system", "content": "Read: Thoroughly understand the transcript, noting main ideas and themes.\n" +
-                        "Adjust Length: Match the summary to the transcript's complexity.\n" +
                         "Detailed transcripts: Cover essentials, avoid oversimplification.\n" +
-                        "Simpler texts: Be concise, omit extra details, reponses in brazilian portuguese\n" +
+                        "Simpler texts: Be concise, but produce a highly detailed summary, reponses in brazilian portuguese\n" +
                         "Focus: If content-rich, prioritize the video's thesis and supporting evidence.\n" +
                         "Structure:\n" +
                         "Start: Introduce the main topic briefly.\n" +
@@ -48,6 +46,8 @@ export default class AiService {
                         "End: Conclude with major outcomes or calls to action"},
                 {"role": "user", "content": videoTranscript}
             ],
+            max_tokens: 1000,
+            temperature: 0.3,
             model: "gpt-3.5-turbo-0125",
         });
         let costs  = completion.usage?.total_tokens;

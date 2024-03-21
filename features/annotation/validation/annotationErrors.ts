@@ -5,4 +5,5 @@ export class AnnotationNaoExiste extends Error {
         super(message);
         this.type = type;
     }
+
 }
