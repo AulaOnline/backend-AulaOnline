@@ -1,22 +1,21 @@
 // annotationService.ts
 import { Annotation } from "../../core/entities/AnnotationEntitie";
 import { AppDataSource } from "../../app";
-import { AnnotationNaoExiste } from "./validation/annotationErrors";
 import {Video} from "../../core/entities/videoEntitie";
 import {User} from "../../core/entities/userEntitie";
 import {CustomUserError} from "../../features/login/validation/UserErrors";
+import {CustomNotationError} from "./validation/annotationErrors";
+import {CustomVideoError} from "../video/validation/VideoErrors";
 
 export default class AnnotationService {
-    async postNewNotation(title: string, body: string, videoLink: string, userID: string, ) {
+    async postNewNotation(title: string, body: string, videoLink: string, userID: string) {
         const id: number = parseInt(userID);
-        console.log(id,title, body, videoLink, userID);
         try {
-            const user: User | null = await User.findOne({ where: { id: id } });
+            const user: User | null = await User.findOne({where: {id: id}});
             if (!user)
                 throw CustomUserError.UsuarioNaoExiste(404, "ID não cadastrado no sistema");
             if (videoLink === null)
-                throw  Error();
-                //throw new UsuarioNaoExiste(404, "Link Invalido");
+                throw CustomVideoError.LinkNaoExiste(404, "Esse Video Nao Existe No Hisotrico Do Usuario");
 
             const video: Video | null = await Video.findOne({
                 where: {
@@ -24,19 +23,18 @@ export default class AnnotationService {
                     video_link: videoLink
                 }
             });
-            if (video){
-                const annotation: Annotation = new Annotation();
-                annotation.tittle = title;
-                annotation.body = body;
-                annotation.video = video;
-                annotation.user = user;
-                await AppDataSource.manager.save(annotation);
-                return video;
-            }
+            if (!video)
+                throw CustomVideoError.VideoNaoExiste(404, "Video Nao Existe No Historico Desse Usuario")
 
-        } catch (error) {
-            console.error("Erro ao salvar nova anotação:", error);
-            throw new Error("Erro ao salvar nova anotação");
+            const annotation: Annotation = new Annotation();
+            annotation.tittle = title;
+            annotation.body = body;
+            annotation.video = video;
+            annotation.user = user;
+            await AppDataSource.manager.save(annotation);
+            return video;
+        } catch (error: Error | any){
+            throw error;
         }
     }
     async getNotation(userID: string, videoLink: string) {

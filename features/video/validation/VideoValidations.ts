@@ -5,7 +5,6 @@ import {CustomUserError} from  "../../login/validation/UserErrors"
 function isValidYoutubeLink(string: string): boolean {
     return /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/.test(string);
 }
-
 function isOnlyNumbers(string: string): boolean {
     return /^\d+$/.test(string);
 }

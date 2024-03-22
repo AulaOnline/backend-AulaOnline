@@ -3,6 +3,7 @@ import express from 'express';
 import AnnotationService from './annotationService';
 import CustomResponse from "../../core/model/customResponse";
 import {Annotation} from "../../core/entities/AnnotationEntitie";
+import {AnnotationValidation} from "./validation/annotationValidation";
 
 const router = express.Router();
 const annotationService = new AnnotationService();
@@ -10,14 +11,14 @@ const annotationService = new AnnotationService();
 
 //CREATE
 router.post('/postNewNotation/:userId', async (req, res) => {
+    const {title, body, videoLink } = req.body;
+    const userID: string = req.params.userId
     try {
-        const {title, body, videoLink } = req.body;
-        const userID: string = req.params.userId
-        const postedNotation= await annotationService.postNewNotation(title, body, videoLink, userID);
+        await AnnotationValidation.isValidNote(userID, title, body, videoLink);
+        const postedNotation = await annotationService.postNewNotation(title, body, videoLink, userID);
         return res.status(201).json(new CustomResponse(201, "Anotacao Cadastrada Com Sucesso", postedNotation));
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Erro interno do servidor' });
+    } catch (error: Error | any) {
+        return res.status(error.type).json( new  CustomResponse(error.type, error.message, error));
     }
 });
 
