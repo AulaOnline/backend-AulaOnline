@@ -127,7 +127,6 @@ export default class AiService {
             throw CustomAIErrors.videoisToBigTogenerate(404, "Video eh Muito Grande Para Gerar Script");
 
         return await this.generateQuestions(Transcript, videoLink);
-
     }
 
     //AUXILIARIES METHODS
@@ -210,7 +209,7 @@ export default class AiService {
                 }
             }
         }
-        return {questionsJson}
+        return questionsJson
     }
     async postNewGeneratedSummary(videoLink: string, generatedSummary: string){
         const summary = new Summary();
