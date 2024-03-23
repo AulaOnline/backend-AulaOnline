@@ -58,7 +58,7 @@ export class UserValidations {
     }
 
     private static validateEmail(email: string): void {
-        if (email.length < 2 || !isValidEmail(email)) {
+        if (email.length < 2 || !isValidEmail(email) || email.length > 40) {
             throw CustomUserError.EmailInvalido(400, "Email do Usuario Eh Invalido");
         }
     }

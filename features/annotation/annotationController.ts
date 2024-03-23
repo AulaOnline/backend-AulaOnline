@@ -26,11 +26,11 @@ router.post('/postNewNotation/:userId', async (req, res) => {
 router.get('/getAllNotations/:userId', async (req, res) => {
     try {
         const userID: string = req.params.userId
+        await AnnotationValidation.isValidID(userID);
         const Allanotations: Annotation[] = await annotationService.getAllNotations(userID);
-        return res.status(201).json(new CustomResponse(201, "Anotacao Cadastrada Com Sucesso", Allanotations));
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Erro interno do servidor' });
+        return res.status(201).json(new CustomResponse(201, "Anotacao Recuperada Com Sucesso", Allanotations));
+    }catch (error: Error | any) {
+        return res.status(error.type).json(new CustomResponse(error.type, error.message, error));
     }
 });
 
@@ -38,10 +38,11 @@ router.get('/getNotation/:userId', async (req, res) => {
     try {
         const {videoLink} = req.body;
         const userID: string = req.params.userId
+        await AnnotationValidation.isValidIDandLink(userID, videoLink);
         const notation: Annotation= await annotationService.getNotation(userID, videoLink);
         return res.status(201).json(new CustomResponse(201, "Anotacao Cadastrada Com Sucesso", notation));
-    } catch (error) {
-        return res.status(500).json(new CustomResponse(404, "Bad Request", error));
+    } catch (error: Error | any) {
+        return res.status(error.type).json(new CustomResponse(error.type, error.message, error));
     }
 });
 
@@ -49,11 +50,11 @@ router.get('/getNotation/:userId', async (req, res) => {
 router.delete('/deleteAllNotationOfUser/:userId', async (req, res) => {
     try {
         const userID: string = req.params.userId
+        await AnnotationValidation.isValidID(userID);
         await annotationService.deleteAllNotationsOfUser(userID);
         return res.status(201).json(new CustomResponse(201, "Anotacao Delet Com Sucesso", null));
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Erro interno do servidor' });
+    } catch (error: Error | any) {
+        return res.status(error.type).json(new CustomResponse(error.type, error.message, error));
     }
 });
 

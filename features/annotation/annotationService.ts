@@ -41,48 +41,46 @@ export default class AnnotationService {
         const userIdNumber: number = parseInt(userID);
         try {
             const user: User | null = await User.findOne({ where: { id: userIdNumber } });
-            if (!user) {
-                throw new Error("ID não cadastrado no sistema");
-            }
+            if (!user)
+                throw CustomUserError.UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+
 
             const video: Video | null = await Video.findOne({ where: { video_link: videoLink, user: user } });
-            if (!video) {
-                throw new Error("Link de vídeo inválido");
-            }
+            if (!video)
+                throw CustomVideoError.VideoNaoExiste(404,"Esse Video Nao Consta No Historico Do Usuario");
 
-            // Busca a anotação usando o usuário e o vídeo
+
             const annotation: Annotation | null = await Annotation.findOne({
                 where: {
                     user: user,
                     video: video
                 }
             });
-            if (!annotation) {
-                throw new Error("Anotação não encontrada");
-            }
+            if (!annotation)
+                throw CustomNotationError.videoSemAnotacaoVinculada(404, "O usuario Nao tem nenhuma anotacao vinculada a esse video.");
+
             return annotation;
-        } catch (error) {
-            console.error(error);
-            throw error; // Ou manuseie o erro conforme necessário
+        }  catch (error: Error | any){
+            throw error;
         }
     }
     async getAllNotations(userID: string) {
         const userIdNumber: number = parseInt(userID);
         try {
             const user: User | null = await User.findOne({ where: { id: userIdNumber } });
-            if (!user) {
-                throw new Error("ID não cadastrado no sistema");
-            }
-            // Busca a anotação usando o usuário e o vídeo
+
+            if (!user)
+                throw CustomUserError.UsuarioNaoExiste(404, "ID não cadastrado no sistema");
+
             const annotation: Annotation[] | null = await Annotation.find({
                 where: {user: user,}});
-            if (!annotation) {
-                throw new Error("Anotação não encontrada");
+
+            if (annotation.length === 0) {
+                throw  CustomNotationError.anotacaoNaoExiste(404,"Nenhuma Anotacao encontrada");
             }
             return annotation;
-        } catch (error) {
-            console.error(error);
-            throw error; // Ou manuseie o erro conforme necessário
+        }  catch (error: Error | any){
+            throw error;
         }
     }
 

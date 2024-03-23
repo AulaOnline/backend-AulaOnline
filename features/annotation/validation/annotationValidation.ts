@@ -12,7 +12,6 @@ function isValidYoutubeLink(string: string): boolean {
 
 export class AnnotationValidation {
     public static async isValidNote(userID: string, title: string, body: string, videoLink: string):Promise<void> {
-        this.isOnlyNumbers(userID);
         this.isNegative(userID);
         this.isNotEmptyString(title,'titulo');
         this.isNotEmptyString(body, 'corpo');
@@ -20,6 +19,16 @@ export class AnnotationValidation {
         this.isValidSize(body, 'corpo');
         this.isValidLink(videoLink);
     }
+    public static async isValidID(userID: string):Promise<void> {
+        this.isOnlyNumbers(userID);
+        this.isNegative(userID);
+    }
+    public static async isValidIDandLink(userID: string, videoLink: string):Promise<void> {
+        this.isOnlyNumbers(userID);
+        this.isNegative(userID);
+        this.isValidLink(videoLink);
+    }
+
 
     private static isOnlyNumbers(id: string): void {
         if (!isOnlyNumbers(id))

@@ -18,4 +18,12 @@ export class CustomNotationError extends Error {
     static erroInterno(type: number, message: string) {
         return new CustomNotationError(type, message);
     }
+
+    static anotacaoNaoExiste(type: number, message: string) {
+        return new CustomNotationError(type, message);
+    }
+
+    static videoSemAnotacaoVinculada(type: number, message: string) {
+        return new CustomNotationError(type, message);
+    }
 }
