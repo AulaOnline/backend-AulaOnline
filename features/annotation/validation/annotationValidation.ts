@@ -32,30 +32,30 @@ export class AnnotationValidation {
 
     private static isOnlyNumbers(id: string): void {
         if (!isOnlyNumbers(id))
-            throw CustomUserError.IDInvalido(400, "ID do Usuario Nao Pode Ser nao Numerico");
+            throw CustomUserError.IDInvalido(400, "ID do usuário não pode ser não numérico");
     }
     private static isNegative(id: string): void {
         const NumberID = parseInt(id)
         if (NumberID <= 0)
-            throw CustomUserError.IDInvalido(400, "ID do Usuario Nao Pode Ser Negativo");
+            throw CustomUserError.IDInvalido(400, "ID do usuário não pode ser negativo");
     }
     private static isValidLink(link: string): void {
         if (!isValidYoutubeLink(link))
-            throw CustomVideoError.linkInvalido(400, "Link Deve Ser Do Youtube");
+            throw CustomVideoError.linkInvalido(400, "Link deve ser do Youtube");
     }
 
     private static isNotEmptyString(campo: string, nomeDoCampo: string) {
         if (campo.length <= 0)
-            throw CustomNotationError.campoVazio(400, `O ${nomeDoCampo} Nao Pode Ser Vazio`)
+            throw CustomNotationError.campoVazio(400, `O ${nomeDoCampo} Não pode ser vazio`)
 
         if (isOnlyNumbers(campo))
-            throw CustomNotationError.campoNaoPodeSerSomenteNumerico(400, `${nomeDoCampo} Nao Pode Ser Apenas Numerico`)
+            throw CustomNotationError.campoNaoPodeSerSomenteNumerico(400, `${nomeDoCampo} Não pode ser apenas numérico`)
     }
     private static isValidSize(campo: string, nomeDoCampo: string) {
         if (campo.length > 1000)
             throw CustomNotationError.campoMuitoGrande(400, `O ${nomeDoCampo} Excedeu o limite de Caracteres`)
 
         if (nomeDoCampo.toLowerCase() === 'titulo' && campo.length > 35)
-            throw CustomNotationError.campoMuitoGrande(400, `O ${nomeDoCampo} Eh Muito Grande`)
+            throw CustomNotationError.campoMuitoGrande(400, `O ${nomeDoCampo} é muito grande`)
     }
 }

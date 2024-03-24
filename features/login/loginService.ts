@@ -19,7 +19,7 @@ export default class UserService {
         try {
             return await AppDataSource.manager.save(NewUser);
         } catch (error) {
-            throw CustomUserError.ErroDeEscrita(500, "Erro ao Registrar Inforacao No Banco De Dados")}
+            throw CustomUserError.ErroDeEscrita(500, "Erro ao Registrar Informação No Banco De Dados")}
     }
     async getUserByID(userID: string): Promise<User> {
         const id: number = parseInt(userID, 10);
@@ -32,7 +32,7 @@ export default class UserService {
     async getUserIDByUsername(username: string) {
         const user = await User.findOne({ where: { username: username } });
         if (user == null)
-            throw CustomUserError.UsernameInvalido(404, "Nao Existem Usuarios Com Esse Username")
+            throw CustomUserError.UsernameInvalido(404, "Não Existem Usuários Com Esse Username")
         return {id: user.id};
     }
 
@@ -53,10 +53,10 @@ export default class UserService {
 
         const existingUser: User | null = await User.findOne({where: {username: user.username}});
         if (!existingUser)
-            throw CustomUserError.IDInvalido(404, "Credencias Incorretas");
+            throw CustomUserError.IDInvalido(404, "Credenciais Incorretas");
 
         if(!await bcrypt.compare(user.password, existingUser.password))
-            throw CustomUserError.SenhaInvalida(404, "Credencias Incorretas")
+            throw CustomUserError.SenhaInvalida(404, "Credenciais Incorretas")
         let token: string;
         if (await bcrypt.compare(user.password, existingUser.password)) {
             token = createTokens(existingUser)

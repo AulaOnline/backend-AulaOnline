@@ -31,11 +31,13 @@ router.get('/generateSummary', async (req, res) => {
     try {
         await AIValidation.isValidLinkToPrompt(videoLink);
         const summary = await aiService.getSummary(videoLink);
-        res.status(200).json( new CustomResponse(201, "Chamada Feita", summary));
-    } catch (error: Error | any){
-        res.status(error.type).json( new CustomResponse(error.type,error.message,null));
+        res.status(200).json(new CustomResponse(201, "Chamada Feita", summary));
+    } catch (error: Error | any) {
+        const statusCode = error.type === 'CustomAIErrors' ? 404 : 500;
+        res.status(statusCode).json(new CustomResponse(statusCode, error.message, null));
     }
 })
+
 router.get('/generateQuestion', async (req, res) => {
     const { videoLink } = req.body;
     try {
