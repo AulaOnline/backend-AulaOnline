@@ -60,7 +60,6 @@ app.use('/generate', aiController)
 app.use((req, res) => {
     return res.status(404).json(new customResponse(404, "Erro 404 Detectado", null));
 })
-
 app.listen(PORT, () => {
     console.log(`Servidor rodando com sucesso ${HOSTNAME}:${PORT}`)
 })

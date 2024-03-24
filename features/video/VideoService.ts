@@ -91,7 +91,7 @@ export default class VideoService {
     }
 
   }
-    async getYouTubeVideoInfo(videoLink: string, apiKey: string): Promise<{ title: string; duration: number;}> {
+    async getYouTubeVideoInfo(videoLink: string, apiKey: string): Promise<{ title: string; duration: number; thumbnailUrl : String;}> {
         try {
             const videoId = this.extractVideoId(videoLink);
             if (!videoId)
@@ -101,7 +101,9 @@ export default class VideoService {
             const videoInfo = response.data.items[0];
             const title = videoInfo.snippet.title;
             const duration = this.parseISO8601Duration(videoInfo.contentDetails.duration);
-            return { title, duration };
+            const thumbnailUrl = videoInfo.snippet.thumbnails.default.url; 
+            console.log(thumbnailUrl);
+            return { title, duration, thumbnailUrl };
         } catch (error) {
             throw error;
         }
