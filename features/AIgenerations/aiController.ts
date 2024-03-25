@@ -26,7 +26,7 @@ interface QuestionsObject {
 }
 
 
-router.get('/generateSummary', async (req, res) => {
+router.post('/generateSummary', async (req, res) => {
     const { videoLink } = req.body;
     try {
         await AIValidation.isValidLinkToPrompt(videoLink);
