@@ -3,7 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv';
 dotenv.config();
 const PORT = process.env.PORT
-const HOSTNAME = process.env.HOSTNAME
+const HOSTNAME = process.env.DB_HOST
 const app = express()
 import customResponse from './core/model/customResponse';
 import loginController from './features/login/loginController';
@@ -22,11 +22,12 @@ dotenv.config();
 
 const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASSWORD;
+const dbName = process.env.DB_DBNAME;
 
 
 export const AppDataSource = new DataSource({
     type: "mysql",
-    database: "AulaOnline-Database",
+    database: dbName,
     username: dbUser,
     password: dbPassword,
     //1º uso mudar para true:
@@ -47,7 +48,7 @@ app.use(express.json());
 app.get('/', (req, res) => { res.send('Hello World!') })
 
 app.use(cors({
-    origin: ['http://localhost:3000']
+    origin: ['https://aulaonline.onrender.com']
 }))
 
 //Adcione suas rotas, senão apesar de criadas não vão ser usadas...
