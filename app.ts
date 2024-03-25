@@ -30,7 +30,7 @@ export const AppDataSource = new DataSource({
     username: dbUser,
     password: dbPassword,
     //1º uso mudar para true:
-    synchronize: false,
+    synchronize: true,
     entities: [User, Video, Annotation, Summary]
 })
 

@@ -102,7 +102,6 @@ export default class VideoService {
             const title = videoInfo.snippet.title;
             const duration = this.parseISO8601Duration(videoInfo.contentDetails.duration);
             const thumbnailUrl = videoInfo.snippet.thumbnails.default.url; 
-            console.log(thumbnailUrl);
             return { title, duration, thumbnailUrl };
         } catch (error) {
             throw error;
