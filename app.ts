@@ -41,7 +41,7 @@ app.use(express.json());
 app.get('/', (req, res) => { res.send('Hello World!') });
 
 app.use(cors({
-    origin: ['https://aulaonline.onrender.com']
+    origin: ['https://aula-online-kappa.vercel.app']
 }));
 
 app.use('/login', loginController);

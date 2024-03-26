@@ -38,12 +38,11 @@ router.post('/generateSummary', async (req, res) => {
     }
 })
 
-router.get('/generateQuestion', async (req, res) => {
+router.post('/generateQuestion', async (req, res) => {
     const { videoLink } = req.body;
     try {
         await AIValidation.isValidLinkToPrompt(videoLink);
         const questions: QuestionsObject  = await aiService.getQuestions(videoLink);
-        //console.log(questions['Question 1']);
         res.status(200).json( new CustomResponse(201, "Chamada Feita", questions));
 
     } catch (error: Error | any){
