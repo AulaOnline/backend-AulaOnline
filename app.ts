@@ -41,7 +41,7 @@ app.use(express.json());
 app.get('/', (req, res) => { res.send('Hello World!') });
 
 app.use(cors({
-    origin: '*'
+    origin: ['https://aula-online-y2vn.vercel.app/']
 }));
 
 // Adicione suas rotas, senão apesar de criadas não vão ser usadas...
