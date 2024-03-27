@@ -12,13 +12,15 @@ import videoController from './features/video/VideoController';
 import aiController from "./features/AIgenerations/aiController";
 import annotationController from "./features/annotation/annotationController";
 const cookieParser = require('cookie-parser');
+
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = 3001;
 const USERNAME = process.env.DB_USER;
 const HOSTNAME = process.env.HOSTNAME;
 const PASSWORD = process.env.DB_PASSWORD;
+
 
 export const AppDataSource = new DataSource({
     type: "mysql",

@@ -34,7 +34,7 @@ router.get('/getAllNotations/:userId', async (req, res) => {
     }
 });
 
-router.get('/getNotation/:userId', async (req, res) => {
+router.post('/getNotation/:userId', async (req, res) => {
     try {
         const {videoLink} = req.body;
         const userID: string = req.params.userId
