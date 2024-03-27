@@ -12,20 +12,19 @@ import videoController from './features/video/VideoController';
 import aiController from "./features/AIgenerations/aiController";
 import annotationController from "./features/annotation/annotationController";
 const cookieParser = require('cookie-parser');
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
-const USERNAME = process.env.DB_USER;
-const HOSTNAME = process.env.HOSTNAME;
-const PASSWORD = process.env.DB_PASSWORD;
+const HOSTNAME = process.env.DB_HOST;
+
+const DB_CONNECTION_URI = process.env.DB_CONNECTION_URI;
 
 export const AppDataSource = new DataSource({
     type: "mysql",
-    database: "AulaOnline-Database",
-    username: USERNAME,
-    password: PASSWORD,
-    synchronize: false,
+    url: DB_CONNECTION_URI, 
+    synchronize: true,
     entities: [User, Video, Annotation, Summary]
 });
 
@@ -42,9 +41,10 @@ app.use(express.json());
 app.get('/', (req, res) => { res.send('Hello World!') });
 
 app.use(cors({
-    origin: ['http://localhost:3000']
+    origin: ['https://aulaonline.onrender.com']
 }));
 
+// Adicione suas rotas, senão apesar de criadas não vão ser usadas...
 app.use('/login', loginController);
 app.use('/video', videoController);
 app.use('/annotation', annotationController);
