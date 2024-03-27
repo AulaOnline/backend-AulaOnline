@@ -41,7 +41,7 @@ app.use(express.json());
 app.get('/', (req, res) => { res.send('Hello World!') });
 
 app.use(cors({
-    origin: ['https://aulaonline.onrender.com']
+    origin: '*'
 }));
 
 // Adicione suas rotas, senão apesar de criadas não vão ser usadas...
